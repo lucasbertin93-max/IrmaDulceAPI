@@ -1,0 +1,11 @@
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\bin\Debug\net8.0\IrmaDulce.Domain.deps.json
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\bin\Debug\net8.0\IrmaDulce.Domain.dll
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\bin\Debug\net8.0\IrmaDulce.Domain.pdb
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\IrmaDulce.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\IrmaDulce.Domain.AssemblyInfoInputs.cache
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\IrmaDulce.Domain.AssemblyInfo.cs
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\IrmaDulce.Domain.csproj.CoreCompileInputs.cache
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\IrmaDulce.Domain.dll
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\refint\IrmaDulce.Domain.dll
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\IrmaDulce.Domain.pdb
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Domain\obj\Debug\net8.0\ref\IrmaDulce.Domain.dll
