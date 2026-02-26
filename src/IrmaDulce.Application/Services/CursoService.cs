@@ -105,6 +105,12 @@ public class CursoService : ICursoService
         await _dcRepo.DeleteAsync(dc);
     }
 
+    public async Task<IEnumerable<int>> GetDisciplinaIdsDoCursoAsync(int cursoId)
+    {
+        var dcs = await _dcRepo.FindAsync(dc => dc.CursoId == cursoId);
+        return dcs.Select(dc => dc.DisciplinaId);
+    }
+
     private static CursoResponse MapToResponse(Curso c) => new(
         Id: c.Id,
         IdFuncional: c.IdFuncional,

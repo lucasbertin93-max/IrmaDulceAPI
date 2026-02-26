@@ -1,6 +1,7 @@
 using IrmaDulce.Application.DTOs;
 using IrmaDulce.Application.Interfaces;
 using IrmaDulce.Domain.Entities;
+using IrmaDulce.Domain.Enums;
 using IrmaDulce.Domain.Interfaces;
 
 namespace IrmaDulce.Application.Services;
@@ -13,6 +14,7 @@ public class DiarioClasseService : IDiarioClasseService
     private readonly IPresencaAlunoRepository _presencaRepo;
     private readonly IConfiguracaoEscolarRepository _configRepo;
     private readonly IRepository<PresencaAluno> _presencaBaseRepo;
+    private readonly IMatriculaRepository _matriculaRepo;
 
     public DiarioClasseService(
         IDiarioClasseRepository diarioRepo,
@@ -20,7 +22,8 @@ public class DiarioClasseService : IDiarioClasseService
         INotaAlunoRepository notaRepo,
         IPresencaAlunoRepository presencaRepo,
         IConfiguracaoEscolarRepository configRepo,
-        IRepository<PresencaAluno> presencaBaseRepo)
+        IRepository<PresencaAluno> presencaBaseRepo,
+        IMatriculaRepository matriculaRepo)
     {
         _diarioRepo = diarioRepo;
         _avaliacaoRepo = avaliacaoRepo;
@@ -28,6 +31,7 @@ public class DiarioClasseService : IDiarioClasseService
         _presencaRepo = presencaRepo;
         _configRepo = configRepo;
         _presencaBaseRepo = presencaBaseRepo;
+        _matriculaRepo = matriculaRepo;
     }
 
     public async Task<int> RegistrarAulaAsync(DiarioClasseRequest request)
@@ -164,5 +168,96 @@ public class DiarioClasseService : IDiarioClasseService
         var frequencia = await CalcularFrequenciaAsync(alunoId, turmaId, disciplinaId);
 
         return media >= config.MediaMinimaAprovacao && frequencia >= config.FrequenciaMinimaPercent;
+    }
+
+    public async Task<object> GetHistoricoAsync(int turmaId, int disciplinaId)
+    {
+        var diarios = await _diarioRepo.GetByTurmaAndDisciplinaAsync(turmaId, disciplinaId);
+        var diarioList = diarios.ToList();
+
+        // Build date columns
+        var aulas = diarioList.Select(d => new
+        {
+            d.Id,
+            d.Data,
+            d.QuantidadeHorasAula,
+            ConteudoMinistrado = d.ConteudoMinistrado ?? ""
+        }).ToList();
+
+        // Collect all unique student IDs from presences
+        var alunoIds = diarioList.SelectMany(d => d.Presencas)
+            .Select(p => p.AlunoId)
+            .Distinct()
+            .ToList();
+
+        // Build student rows with presence per diary entry
+        var alunosGrid = alunoIds.Select(alunoId =>
+        {
+            var firstPresenca = diarioList.SelectMany(d => d.Presencas).FirstOrDefault(p => p.AlunoId == alunoId);
+            return new
+            {
+                AlunoId = alunoId,
+                AlunoNome = firstPresenca?.Aluno?.NomeCompleto ?? $"Aluno #{alunoId}",
+                AlunoIdFuncional = firstPresenca?.Aluno?.IdFuncional ?? "",
+                Presencas = diarioList.Select(d =>
+                {
+                    var p = d.Presencas.FirstOrDefault(p => p.AlunoId == alunoId);
+                    return new
+                    {
+                        DiarioId = d.Id,
+                        Presente = p?.Presente ?? false,
+                        FaltaJustificada = p?.FaltaJustificada ?? false,
+                    };
+                }).ToList()
+            };
+        }).OrderBy(a => a.AlunoNome).ToList();
+
+        return new { aulas, alunos = alunosGrid };
+    }
+
+    public async Task<object> GetNotasGridAsync(int turmaId, int disciplinaId)
+    {
+        var avaliacoes = (await _avaliacaoRepo.GetByTurmaAndDisciplinaAsync(turmaId, disciplinaId))
+            .OrderBy(a => a.DataAplicacao ?? DateTime.MaxValue).ToList();
+
+        var matriculas = (await _matriculaRepo.GetByTurmaIdAsync(turmaId))
+            .Where(m => m.Status == StatusMatricula.Ativo).ToList();
+
+        var config = await _configRepo.GetConfigAsync();
+
+        var alunosGrid = new List<object>();
+        foreach (var mat in matriculas)
+        {
+            var notas = (await _notaRepo.GetByAlunoAndDisciplinaAsync(mat.AlunoId, turmaId, disciplinaId)).ToList();
+
+            var notasPorAvaliacao = avaliacoes.Select(av =>
+            {
+                var nota = notas.FirstOrDefault(n => n.AvaliacaoId == av.Id);
+                return new { AvaliacaoId = av.Id, Nota = nota?.Nota, NotaId = nota?.Id };
+            }).ToList();
+
+            // Weighted average
+            decimal media = 0;
+            var somaNxP = notas.Sum(n => n.Nota * n.Avaliacao.Peso);
+            var somaP = notas.Sum(n => n.Avaliacao.Peso);
+            if (somaP > 0) media = Math.Round(somaNxP / somaP, 2);
+
+            alunosGrid.Add(new
+            {
+                AlunoId = mat.AlunoId,
+                AlunoNome = mat.Aluno.NomeCompleto,
+                AlunoIdFuncional = mat.Aluno.IdFuncional,
+                Notas = notasPorAvaliacao,
+                Media = media,
+                Aprovado = media >= config.MediaMinimaAprovacao,
+            });
+        }
+
+        return new
+        {
+            avaliacoes = avaliacoes.Select(a => new { a.Id, a.Nome, a.Descricao, a.DataAplicacao, a.Peso }),
+            alunos = alunosGrid.OrderBy(a => ((dynamic)a).AlunoNome),
+            mediaMinima = config.MediaMinimaAprovacao,
+        };
     }
 }

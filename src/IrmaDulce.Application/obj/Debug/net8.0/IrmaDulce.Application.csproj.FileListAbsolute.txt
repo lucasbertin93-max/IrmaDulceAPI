@@ -13,3 +13,4 @@ C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\obj\Debug\net8.0\IrmaDu
 C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\obj\Debug\net8.0\refint\IrmaDulce.Application.dll
 C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\obj\Debug\net8.0\IrmaDulce.Application.pdb
 C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\obj\Debug\net8.0\ref\IrmaDulce.Application.dll
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\obj\Debug\net8.0\IrmaDulce.Application.sourcelink.json

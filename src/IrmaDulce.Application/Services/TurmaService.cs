@@ -13,20 +13,24 @@ public class TurmaService : ITurmaService
     private readonly IMatriculaRepository _matriculaRepo;
     private readonly IPessoaRepository _pessoaRepo;
     private readonly IRepository<TurmaDisciplina> _tdRepo;
+    private readonly IDisciplinaRepository _disciplinaRepo;
 
     public TurmaService(
         ITurmaRepository turmaRepo,
         ICursoRepository cursoRepo,
         IMatriculaRepository matriculaRepo,
         IPessoaRepository pessoaRepo,
-        IRepository<TurmaDisciplina> tdRepo)
+        IRepository<TurmaDisciplina> tdRepo,
+        IDisciplinaRepository disciplinaRepo)
     {
         _turmaRepo = turmaRepo;
         _cursoRepo = cursoRepo;
         _matriculaRepo = matriculaRepo;
         _pessoaRepo = pessoaRepo;
         _tdRepo = tdRepo;
+        _disciplinaRepo = disciplinaRepo;
     }
+
 
     public async Task<TurmaResponse> CriarAsync(TurmaCreateRequest request)
     {
@@ -153,6 +157,50 @@ public class TurmaService : ITurmaService
             Status: m.Status,
             DataMatricula: m.DataMatricula
         ));
+    }
+
+    public async Task CancelarMatriculaAsync(int turmaId, int alunoId)
+    {
+        var matriculas = await _matriculaRepo.GetByTurmaIdAsync(turmaId);
+        var matricula = matriculas.FirstOrDefault(m => m.AlunoId == alunoId && m.Status == StatusMatricula.Ativo)
+            ?? throw new KeyNotFoundException("Matrícula ativa não encontrada.");
+
+        matricula.Status = StatusMatricula.Cancelado;
+        await _matriculaRepo.UpdateAsync(matricula);
+    }
+
+    public async Task<object> GetDisciplinasDaTurmaAsync(int turmaId)
+    {
+        var tds = await _tdRepo.FindAsync(td => td.TurmaId == turmaId);
+        var list = new List<object>();
+
+        foreach (var td in tds)
+        {
+            var disciplina = await _disciplinaRepo.GetByIdAsync(td.DisciplinaId);
+            Pessoa? docente = td.DocenteId.HasValue ? await _pessoaRepo.GetByIdAsync(td.DocenteId.Value) : null;
+
+            list.Add(new
+            {
+                td.Id,
+                td.TurmaId,
+                td.DisciplinaId,
+                DisciplinaNome = disciplina?.Nome ?? "",
+                td.DocenteId,
+                DocenteNome = docente?.NomeCompleto ?? null as string,
+            });
+        }
+
+        return list;
+    }
+
+    public async Task AtribuirDocenteAsync(int turmaId, int disciplinaId, int? docenteId)
+    {
+        var tds = await _tdRepo.FindAsync(td => td.TurmaId == turmaId && td.DisciplinaId == disciplinaId);
+        var td = tds.FirstOrDefault()
+            ?? throw new KeyNotFoundException("Disciplina não encontrada nesta turma.");
+
+        td.DocenteId = docenteId;
+        await _tdRepo.UpdateAsync(td);
     }
 
     private static TurmaResponse MapToResponse(Turma t, string cursoNome) => new(

@@ -17,15 +17,21 @@ public class PessoaRepository : Repository<Pessoa>, IPessoaRepository
 
     public async Task<int> GetNextSequentialIdAsync(string prefix)
     {
-        var lastPessoa = await _dbSet
+        var allWithPrefix = await _dbSet
             .Where(p => p.IdFuncional.StartsWith(prefix))
-            .OrderByDescending(p => p.IdFuncional)
-            .FirstOrDefaultAsync();
+            .Select(p => p.IdFuncional)
+            .ToListAsync();
 
-        if (lastPessoa == null) return 1;
+        // Filter in-memory: only keep IDs where, after removing the prefix,
+        // the remainder is purely numeric (avoids "A" matching "AD0001")
+        var numericIds = allWithPrefix
+            .Where(id => id.Length > prefix.Length)
+            .Select(id => id.Substring(prefix.Length))
+            .Where(suffix => suffix.All(char.IsDigit) && suffix.Length > 0)
+            .Select(suffix => int.Parse(suffix))
+            .ToList();
 
-        var numericPart = lastPessoa.IdFuncional.Substring(prefix.Length);
-        return int.Parse(numericPart) + 1;
+        return numericIds.Count == 0 ? 1 : numericIds.Max() + 1;
     }
 }
 
@@ -92,7 +98,7 @@ public class DiarioClasseRepository : Repository<DiarioClasse>, IDiarioClasseRep
 
     public async Task<IEnumerable<DiarioClasse>> GetByTurmaAndDisciplinaAsync(int turmaId, int disciplinaId)
         => await _dbSet.Where(d => d.TurmaId == turmaId && d.DisciplinaId == disciplinaId)
-                       .Include(d => d.Presencas)
+                       .Include(d => d.Presencas).ThenInclude(p => p.Aluno)
                        .OrderBy(d => d.Data)
                        .ToListAsync();
 }

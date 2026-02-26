@@ -28,6 +28,7 @@ public interface ICursoService
     Task DeletarAsync(int id);
     Task VincularDisciplinaAsync(int cursoId, int disciplinaId, int? semestre);
     Task DesvincularDisciplinaAsync(int cursoId, int disciplinaId);
+    Task<IEnumerable<int>> GetDisciplinaIdsDoCursoAsync(int cursoId);
 }
 
 public interface IDisciplinaService
@@ -48,6 +49,9 @@ public interface ITurmaService
     Task<TurmaResponse> AtualizarAsync(int id, TurmaCreateRequest request);
     Task MatricularAlunoAsync(MatriculaRequest request);
     Task<IEnumerable<MatriculaResponse>> GetMatriculasByTurmaAsync(int turmaId);
+    Task CancelarMatriculaAsync(int turmaId, int alunoId);
+    Task<object> GetDisciplinasDaTurmaAsync(int turmaId);
+    Task AtribuirDocenteAsync(int turmaId, int disciplinaId, int? docenteId);
 }
 
 public interface IDiarioClasseService
@@ -59,6 +63,8 @@ public interface IDiarioClasseService
     Task<decimal> CalcularMediaAsync(int alunoId, int turmaId, int disciplinaId);
     Task<decimal> CalcularFrequenciaAsync(int alunoId, int turmaId, int disciplinaId);
     Task<bool> AlunoAprovadoAsync(int alunoId, int turmaId, int disciplinaId);
+    Task<object> GetHistoricoAsync(int turmaId, int disciplinaId);
+    Task<object> GetNotasGridAsync(int turmaId, int disciplinaId);
 }
 
 public record NotaAlunoResumo(string AvaliacaoNome, decimal Nota, decimal Peso);

@@ -78,4 +78,35 @@ public class TurmasController : ControllerBase
         var matriculas = await _turmaService.GetMatriculasByTurmaAsync(turmaId);
         return Ok(matriculas);
     }
+
+    [HttpDelete("{turmaId}/matriculas/{alunoId}")]
+    public async Task<IActionResult> CancelarMatricula(int turmaId, int alunoId)
+    {
+        try
+        {
+            await _turmaService.CancelarMatriculaAsync(turmaId, alunoId);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+    }
+
+    [HttpGet("{turmaId}/disciplinas")]
+    public async Task<ActionResult<object>> GetDisciplinasDaTurma(int turmaId)
+    {
+        var disciplinas = await _turmaService.GetDisciplinasDaTurmaAsync(turmaId);
+        return Ok(disciplinas);
+    }
+
+    [HttpPut("{turmaId}/disciplinas/{disciplinaId}/docente")]
+    public async Task<IActionResult> AtribuirDocente(int turmaId, int disciplinaId, [FromBody] AtribuirDocenteRequest request)
+    {
+        try
+        {
+            await _turmaService.AtribuirDocenteAsync(turmaId, disciplinaId, request.DocenteId);
+            return Ok(new { message = "Docente atribuído com sucesso." });
+        }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+    }
 }
+
+public record AtribuirDocenteRequest(int? DocenteId);

@@ -129,6 +129,19 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => new { e.TurmaId, e.DisciplinaId }).IsUnique();
+
+            entity.HasOne(e => e.Turma)
+                  .WithMany()
+                  .HasForeignKey(e => e.TurmaId);
+
+            entity.HasOne(e => e.Disciplina)
+                  .WithMany()
+                  .HasForeignKey(e => e.DisciplinaId);
+
+            entity.HasOne(e => e.Docente)
+                  .WithMany()
+                  .HasForeignKey(e => e.DocenteId)
+                  .OnDelete(DeleteBehavior.SetNull);
         });
 
         // ========== Matricula ==========

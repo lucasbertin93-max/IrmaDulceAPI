@@ -76,6 +76,20 @@ public class DiarioClasseController : ControllerBase
         var aprovado = await _diarioService.AlunoAprovadoAsync(alunoId, turmaId, disciplinaId);
         return Ok(new { alunoId, turmaId, disciplinaId, media, frequencia, aprovado });
     }
+
+    [HttpGet("historico")]
+    public async Task<ActionResult<object>> GetHistorico([FromQuery] int turmaId, [FromQuery] int disciplinaId)
+    {
+        var historico = await _diarioService.GetHistoricoAsync(turmaId, disciplinaId);
+        return Ok(historico);
+    }
+
+    [HttpGet("notas-grid")]
+    public async Task<ActionResult<object>> GetNotasGrid([FromQuery] int turmaId, [FromQuery] int disciplinaId)
+    {
+        var grid = await _diarioService.GetNotasGridAsync(turmaId, disciplinaId);
+        return Ok(grid);
+    }
 }
 
 [ApiController]

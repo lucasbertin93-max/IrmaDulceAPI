@@ -82,6 +82,13 @@ public class CursosController : ControllerBase
         }
         catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
     }
+
+    [HttpGet("{cursoId}/disciplinas")]
+    public async Task<ActionResult<IEnumerable<int>>> GetDisciplinasDoCurso(int cursoId)
+    {
+        var ids = await _cursoService.GetDisciplinaIdsDoCursoAsync(cursoId);
+        return Ok(ids);
+    }
 }
 
 [ApiController]

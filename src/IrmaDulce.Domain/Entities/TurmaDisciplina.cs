@@ -10,4 +10,6 @@ public class TurmaDisciplina
     public Turma Turma { get; set; } = null!;
     public int DisciplinaId { get; set; }
     public Disciplina Disciplina { get; set; } = null!;
+    public int? DocenteId { get; set; }
+    public Pessoa? Docente { get; set; }
 }

@@ -17,3 +17,4 @@ C:\Projects\Irma Dulce\backend\src\IrmaDulce.Infrastructure\obj\Debug\net8.0\ref
 C:\Projects\Irma Dulce\backend\src\IrmaDulce.Infrastructure\obj\Debug\net8.0\IrmaDulce.Infrastructure.pdb
 C:\Projects\Irma Dulce\backend\src\IrmaDulce.Infrastructure\obj\Debug\net8.0\IrmaDulce.Infrastructure.genruntimeconfig.cache
 C:\Projects\Irma Dulce\backend\src\IrmaDulce.Infrastructure\obj\Debug\net8.0\ref\IrmaDulce.Infrastructure.dll
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Infrastructure\obj\Debug\net8.0\IrmaDulce.Infrastructure.sourcelink.json
