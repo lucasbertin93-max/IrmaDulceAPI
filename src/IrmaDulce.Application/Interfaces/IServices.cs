@@ -85,6 +85,7 @@ public interface IDocumentoService
 public interface IFinanceiroService
 {
     Task GerarMensalidadesAsync(GerarMensalidadesRequest request);
+    Task GerarBoletosAlunoAsync(GerarBoletosAlunoRequest request);
     Task<IEnumerable<MensalidadeResponse>> GetMensalidadesAsync(int? alunoId, StatusMensalidade? status, int? mes, int? ano);
     Task RegistrarPagamentoAsync(RegistrarPagamentoRequest request, int operadorId);
     Task<MensalidadeResponse> AtualizarMensalidadeAsync(int id, decimal valor, DateTime dataVencimento);

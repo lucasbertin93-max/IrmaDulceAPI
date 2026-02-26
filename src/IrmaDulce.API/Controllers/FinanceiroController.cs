@@ -53,6 +53,17 @@ public class FinanceiroController : ControllerBase
         return Ok(new { message = "Mensalidades geradas com sucesso." });
     }
 
+    [HttpPost("mensalidades/gerar-aluno")]
+    public async Task<IActionResult> GerarBoletosAluno([FromBody] GerarBoletosAlunoRequest request)
+    {
+        try
+        {
+            await _financeiroService.GerarBoletosAlunoAsync(request);
+            return Ok(new { message = $"Boletos gerados com sucesso ({request.QtdParcelas} parcela(s))." });
+        }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+    }
+
     [HttpPost("mensalidades/pagamento")]
     public async Task<IActionResult> RegistrarPagamento([FromBody] RegistrarPagamentoRequest request)
     {

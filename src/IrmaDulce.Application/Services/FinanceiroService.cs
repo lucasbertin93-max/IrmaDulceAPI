@@ -34,18 +34,16 @@ public class FinanceiroService : IFinanceiroService
     /// </summary>
     public async Task GerarMensalidadesAsync(GerarMensalidadesRequest request)
     {
-        // Busca todos os alunos ativos (com matrícula ativa)
         var alunos = await _pessoaRepo.FindAsync(p => p.Perfil == PerfilUsuario.Aluno && p.Ativo);
 
         foreach (var aluno in alunos)
         {
-            // Verifica se já existe mensalidade p/ este aluno, mês e ano
             var existentes = await _mensalidadeRepo.FindAsync(m =>
                 m.AlunoId == aluno.Id &&
                 m.MesReferencia == request.MesReferencia &&
                 m.AnoReferencia == request.AnoReferencia);
 
-            if (existentes.Any()) continue; // Não duplicar
+            if (existentes.Any()) continue;
 
             var mensalidade = new Mensalidade
             {
@@ -61,6 +59,27 @@ public class FinanceiroService : IFinanceiroService
         }
     }
 
+    public async Task GerarBoletosAlunoAsync(GerarBoletosAlunoRequest request)
+    {
+        var aluno = await _pessoaRepo.GetByIdAsync(request.AlunoId)
+            ?? throw new KeyNotFoundException($"Aluno com ID {request.AlunoId} n\u00e3o encontrado.");
+
+        for (int i = 0; i < request.QtdParcelas; i++)
+        {
+            var vencimento = request.PrimeiroVencimento.AddMonths(i);
+            var mensalidade = new Mensalidade
+            {
+                AlunoId = request.AlunoId,
+                MesReferencia = vencimento.Month,
+                AnoReferencia = vencimento.Year,
+                Valor = request.ValorParcela,
+                DataVencimento = vencimento,
+                Status = StatusMensalidade.EmAberto,
+            };
+            await _mensalidadeRepo.AddAsync(mensalidade);
+        }
+    }
+
     public async Task<IEnumerable<MensalidadeResponse>> GetMensalidadesAsync(
         int? alunoId, StatusMensalidade? status, int? mes, int? ano)
     {
@@ -71,7 +90,7 @@ public class FinanceiroService : IFinanceiroService
         else
             mensalidades = await _mensalidadeRepo.GetAllAsync();
 
-        // Atualiza status de atrasadas automaticamente (regra 8.1)
+        // Atualiza status de atrasadas automaticamente
         var agora = DateTime.UtcNow;
         foreach (var m in mensalidades)
         {
@@ -82,7 +101,6 @@ public class FinanceiroService : IFinanceiroService
             }
         }
 
-        // Filtra
         if (status.HasValue)
             mensalidades = mensalidades.Where(m => m.Status == status.Value);
         if (mes.HasValue)
@@ -90,7 +108,10 @@ public class FinanceiroService : IFinanceiroService
         if (ano.HasValue)
             mensalidades = mensalidades.Where(m => m.AnoReferencia == ano.Value);
 
-        return mensalidades.Select(MapMensalidadeToResponse);
+        var results = new List<MensalidadeResponse>();
+        foreach (var m in mensalidades)
+            results.Add(await MapMensalidadeToResponseAsync(m));
+        return results;
     }
 
     /// <summary>
@@ -133,7 +154,7 @@ public class FinanceiroService : IFinanceiroService
         m.DataVencimento = dataVencimento;
         await _mensalidadeRepo.UpdateAsync(m);
 
-        return MapMensalidadeToResponse(m);
+        return await MapMensalidadeToResponseAsync(m);
     }
 
     public async Task DeletarMensalidadeAsync(int id)
@@ -233,16 +254,49 @@ public class FinanceiroService : IFinanceiroService
         );
     }
 
-    private static MensalidadeResponse MapMensalidadeToResponse(Mensalidade m) => new(
-        Id: m.Id,
-        AlunoId: m.AlunoId,
-        AlunoNome: m.Aluno?.NomeCompleto ?? "",
-        AlunoIdFuncional: m.Aluno?.IdFuncional ?? "",
-        MesReferencia: m.MesReferencia,
-        AnoReferencia: m.AnoReferencia,
-        Valor: m.Valor,
-        DataVencimento: m.DataVencimento,
-        DataPagamento: m.DataPagamento,
-        Status: m.Status
-    );
+    private async Task<MensalidadeResponse> MapMensalidadeToResponseAsync(Mensalidade m)
+    {
+        // Load aluno if not loaded
+        var aluno = m.Aluno ?? await _pessoaRepo.GetByIdAsync(m.AlunoId);
+        Pessoa? responsavel = null;
+        if (aluno?.ResponsavelFinanceiroId.HasValue == true)
+            responsavel = await _pessoaRepo.GetByIdAsync(aluno.ResponsavelFinanceiroId.Value);
+
+        var endereco = aluno != null
+            ? $"{aluno.Logradouro}, {aluno.Numero} - {aluno.Bairro}, {aluno.Cidade} - CEP {aluno.CEP}"
+            : "";
+
+        // Get turma from active enrollment
+        string? turmaNome = null;
+        if (aluno != null)
+        {
+            var mats = await _matriculaRepo.GetByAlunoIdAsync(aluno.Id);
+            var ativa = mats.FirstOrDefault(mt => mt.Status == StatusMatricula.Ativo);
+            turmaNome = ativa?.Turma?.Nome;
+        }
+
+        // Number parcela: count by aluno ordered by date
+        var todasDoAluno = (await _mensalidadeRepo.GetByAlunoIdAsync(m.AlunoId))
+            .OrderBy(x => x.DataVencimento).ToList();
+        var numParcela = todasDoAluno.FindIndex(x => x.Id == m.Id) + 1;
+        var totalParcelas = todasDoAluno.Count;
+
+        return new MensalidadeResponse(
+            Id: m.Id,
+            AlunoId: m.AlunoId,
+            AlunoNome: aluno?.NomeCompleto ?? "",
+            AlunoIdFuncional: aluno?.IdFuncional ?? "",
+            MesReferencia: m.MesReferencia,
+            AnoReferencia: m.AnoReferencia,
+            Valor: m.Valor,
+            DataVencimento: m.DataVencimento,
+            DataPagamento: m.DataPagamento,
+            Status: m.Status,
+            ResponsavelNome: responsavel?.NomeCompleto,
+            EnderecoCompleto: endereco,
+            TurmaNome: turmaNome,
+            NumeroParcela: numParcela,
+            TotalParcelas: totalParcelas
+        );
+    }
 }

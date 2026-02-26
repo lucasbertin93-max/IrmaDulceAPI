@@ -92,8 +92,14 @@ public record NotaRequest(int AlunoId, int AvaliacaoId, decimal Nota, string? Ob
 
 // ==================== Mensalidade ====================
 public record GerarMensalidadesRequest(int MesReferencia, int AnoReferencia, decimal Valor, DateTime DataVencimento);
+public record GerarBoletosAlunoRequest(int AlunoId, int QtdParcelas, decimal ValorParcela, DateTime PrimeiroVencimento);
 public record RegistrarPagamentoRequest(int MensalidadeId, decimal ValorPago, MetodoPagamento MetodoPagamento, DateTime DataPagamento, string? Observacao);
-public record MensalidadeResponse(int Id, int AlunoId, string AlunoNome, string AlunoIdFuncional, int MesReferencia, int AnoReferencia, decimal Valor, DateTime DataVencimento, DateTime? DataPagamento, StatusMensalidade Status);
+public record MensalidadeResponse(
+    int Id, int AlunoId, string AlunoNome, string AlunoIdFuncional,
+    int MesReferencia, int AnoReferencia, decimal Valor,
+    DateTime DataVencimento, DateTime? DataPagamento, StatusMensalidade Status,
+    string? ResponsavelNome, string? EnderecoCompleto, string? TurmaNome,
+    int NumeroParcela, int TotalParcelas);
 
 // ==================== Financeiro ====================
 public record LancamentoRequest(DateTime Data, string Descricao, decimal Valor, TipoLancamento Tipo, int? CategoriaId);
