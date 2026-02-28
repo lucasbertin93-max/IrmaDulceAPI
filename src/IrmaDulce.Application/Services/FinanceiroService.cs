@@ -223,9 +223,9 @@ public class FinanceiroService : IFinanceiroService
         var mensalidadesNoPeriodo = mensalidades.Where(m =>
             m.DataVencimento >= inicio && m.DataVencimento <= fim);
 
-        // Entradas = mensalidades pagas + lançamentos de entrada
-        var totalMensalidadesPagas = mensalidadesNoPeriodo
-            .Where(m => m.Status == StatusMensalidade.Pago)
+        // Entradas = mensalidades pagas (baseadas na data de pagamento) + lançamentos de entrada
+        var totalMensalidadesPagas = mensalidades
+            .Where(m => m.Status == StatusMensalidade.Pago && m.DataPagamento >= inicio && m.DataPagamento <= fim)
             .Sum(m => m.Valor);
 
         var totalEntradasAvulsas = lancamentos

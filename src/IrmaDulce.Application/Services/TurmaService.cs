@@ -130,18 +130,30 @@ public class TurmaService : ITurmaService
 
         // Verifica se já matriculado
         var matriculasExistentes = await _matriculaRepo.GetByTurmaIdAsync(request.TurmaId);
-        if (matriculasExistentes.Any(m => m.AlunoId == request.AlunoId && m.Status == StatusMatricula.Ativo))
-            throw new InvalidOperationException("Aluno já está matriculado nesta turma.");
+        var matriculaExistente = matriculasExistentes.FirstOrDefault(m => m.AlunoId == request.AlunoId);
 
-        var matricula = new Matricula
+        if (matriculaExistente != null)
         {
-            AlunoId = request.AlunoId,
-            TurmaId = request.TurmaId,
-            Status = StatusMatricula.Ativo,
-            DataMatricula = DateTime.UtcNow,
-        };
+            if (matriculaExistente.Status == StatusMatricula.Ativo)
+                throw new InvalidOperationException("Aluno já está matriculado nesta turma.");
 
-        await _matriculaRepo.AddAsync(matricula);
+            // Reativa a matrícula se estiver inativa/cancelada
+            matriculaExistente.Status = StatusMatricula.Ativo;
+            matriculaExistente.DataMatricula = DateTime.UtcNow;
+            await _matriculaRepo.UpdateAsync(matriculaExistente);
+        }
+        else
+        {
+            var matricula = new Matricula
+            {
+                AlunoId = request.AlunoId,
+                TurmaId = request.TurmaId,
+                Status = StatusMatricula.Ativo,
+                DataMatricula = DateTime.UtcNow,
+            };
+
+            await _matriculaRepo.AddAsync(matricula);
+        }
     }
 
     public async Task<IEnumerable<MatriculaResponse>> GetMatriculasByTurmaAsync(int turmaId)

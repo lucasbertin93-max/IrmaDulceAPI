@@ -13,6 +13,7 @@ public record PessoaCreateRequest(
     string RG,
     string CPF,
     EstadoCivil EstadoCivil,
+    Sexo Sexo,
     DateTime DataNascimento,
     string Naturalidade,
     string Nacionalidade,
@@ -22,6 +23,8 @@ public record PessoaCreateRequest(
     string Bairro,
     string Cidade,
     string? PontoReferencia,
+    string Telefone,
+    string Email,
     string NomePai,
     string NomeMae,
     PerfilUsuario Perfil,
@@ -37,6 +40,7 @@ public record PessoaResponse(
     string CPF,
     string RG,
     EstadoCivil EstadoCivil,
+    Sexo Sexo,
     DateTime DataNascimento,
     string Naturalidade,
     string Nacionalidade,
@@ -46,6 +50,8 @@ public record PessoaResponse(
     string Bairro,
     string Cidade,
     string? PontoReferencia,
+    string Telefone,
+    string Email,
     string NomePai,
     string NomeMae,
     PerfilUsuario Perfil,
@@ -116,4 +122,8 @@ public record ConfiguracaoRequest(decimal MediaMinimaAprovacao, decimal Frequenc
 public record ConfiguracaoResponse(decimal MediaMinimaAprovacao, decimal FrequenciaMinimaPercent, int HorasAulaPadraoPorDia);
 
 // ==================== Documento ====================
-public record EmitirDocumentoRequest(int AlunoId, TipoDocumento TipoDocumento, string? SenhaMasterOverride);
+public record EmitirDocumentoRequest(
+    int AlunoId, 
+    [property: System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))] TipoDocumento TipoDocumento, 
+    string? SenhaMasterOverride
+);

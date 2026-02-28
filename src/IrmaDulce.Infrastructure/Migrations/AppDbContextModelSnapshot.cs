@@ -493,6 +493,10 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("EstadoCivil")
                         .HasColumnType("INTEGER");
 
@@ -545,6 +549,13 @@ namespace IrmaDulce.Infrastructure.Migrations
 
                     b.Property<int?>("ResponsavelFinanceiroId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<int>("Sexo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -617,7 +628,37 @@ namespace IrmaDulce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Tipo")
+                        .IsUnique();
+
                     b.ToTable("TemplatesDocumentos");
+                });
+
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TemplateTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CampoSistema")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TagNoDocumento")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TemplateDocumentoId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateDocumentoId", "TagNoDocumento")
+                        .IsUnique();
+
+                    b.ToTable("TemplateTags");
                 });
 
             modelBuilder.Entity("IrmaDulce.Domain.Entities.Turma", b =>
@@ -941,6 +982,17 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Navigation("DiarioClasse");
                 });
 
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TemplateTag", b =>
+                {
+                    b.HasOne("IrmaDulce.Domain.Entities.TemplateDocumento", "TemplateDocumento")
+                        .WithMany("Tags")
+                        .HasForeignKey("TemplateDocumentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TemplateDocumento");
+                });
+
             modelBuilder.Entity("IrmaDulce.Domain.Entities.Turma", b =>
                 {
                     b.HasOne("IrmaDulce.Domain.Entities.Curso", "Curso")
@@ -1042,6 +1094,11 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Navigation("Presencas");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TemplateDocumento", b =>
+                {
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("IrmaDulce.Domain.Entities.Turma", b =>

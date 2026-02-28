@@ -14,8 +14,11 @@ public class Pessoa
     public string CPF { get; set; } = string.Empty;
     public EstadoCivil EstadoCivil { get; set; }
     public DateTime DataNascimento { get; set; }
+    public Sexo Sexo { get; set; } = Sexo.NaoInformado;
     public string Naturalidade { get; set; } = string.Empty;
     public string Nacionalidade { get; set; } = string.Empty;
+    public string Telefone { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
 
     // Endereço
     public string Logradouro { get; set; } = string.Empty;

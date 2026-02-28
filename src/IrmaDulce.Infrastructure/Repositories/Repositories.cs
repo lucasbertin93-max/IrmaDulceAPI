@@ -33,6 +33,9 @@ public class PessoaRepository : Repository<Pessoa>, IPessoaRepository
 
         return numericIds.Count == 0 ? 1 : numericIds.Max() + 1;
     }
+
+    public async Task<Pessoa?> GetByIdWithResponsavelAsync(int id)
+        => await _dbSet.Include(p => p.ResponsavelFinanceiro).FirstOrDefaultAsync(p => p.Id == id);
 }
 
 public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
@@ -212,5 +215,13 @@ public class TemplateDocumentoRepository : Repository<TemplateDocumento>, ITempl
     public TemplateDocumentoRepository(AppDbContext context) : base(context) { }
 
     public async Task<TemplateDocumento?> GetByTipoAsync(Domain.Enums.TipoDocumento tipo)
-        => await _dbSet.FirstOrDefaultAsync(t => t.Tipo == tipo && t.Ativo);
+        => await _dbSet.Include(t => t.Tags).FirstOrDefaultAsync(t => t.Tipo == tipo && t.Ativo);
+}
+
+public class TemplateTagRepository : Repository<TemplateTag>, ITemplateTagRepository
+{
+    public TemplateTagRepository(AppDbContext context) : base(context) { }
+
+    public async Task<IEnumerable<TemplateTag>> GetByTemplateIdAsync(int templateId)
+        => await _dbSet.Where(t => t.TemplateDocumentoId == templateId).ToListAsync();
 }

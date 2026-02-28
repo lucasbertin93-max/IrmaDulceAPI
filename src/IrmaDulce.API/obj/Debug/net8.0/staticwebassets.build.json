@@ -1,11 +1,58 @@
 {
   "Version": 1,
-  "Hash": "7Q/L4qi4anFq/bBCcLSOGzJC8mv0hfURyODEjbwW1Jw=",
+  "Hash": "hm9dSCL/VCWaBDxbrYijASOEPTT67/S5cp3NB+n2fzs=",
   "Source": "IrmaDulce.API",
   "BasePath": "_content/IrmaDulce.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "IrmaDulce.API\\wwwroot",
+      "Source": "IrmaDulce.API",
+      "ContentRoot": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\",
+      "BasePath": "_content/IrmaDulce.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\Contrato_20260227144817.docx",
+      "SourceId": "IrmaDulce.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\",
+      "BasePath": "_content/IrmaDulce.API",
+      "RelativePath": "templates/Contrato_20260227144817.docx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\templates\\Contrato_20260227144817.docx"
+    },
+    {
+      "Identity": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\Contrato_20260227173920.docx",
+      "SourceId": "IrmaDulce.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\",
+      "BasePath": "_content/IrmaDulce.API",
+      "RelativePath": "templates/Contrato_20260227173920.docx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\templates\\Contrato_20260227173920.docx"
+    }
+  ]
 }

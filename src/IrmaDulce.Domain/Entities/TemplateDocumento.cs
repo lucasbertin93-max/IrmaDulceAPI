@@ -13,4 +13,7 @@ public class TemplateDocumento
     public string CaminhoArquivo { get; set; } = string.Empty;
     public bool Ativo { get; set; } = true;
     public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
+
+    // Navegação
+    public ICollection<TemplateTag> Tags { get; set; } = new List<TemplateTag>();
 }

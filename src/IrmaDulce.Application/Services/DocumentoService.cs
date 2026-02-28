@@ -38,7 +38,7 @@ public class DocumentoService : IDocumentoService
 
     public async Task<byte[]> EmitirDocumentoAsync(EmitirDocumentoRequest request, int operadorId)
     {
-        var aluno = await _pessoaRepo.GetByIdAsync(request.AlunoId)
+        var aluno = await _pessoaRepo.GetByIdWithResponsavelAsync(request.AlunoId)
             ?? throw new KeyNotFoundException($"Aluno com ID {request.AlunoId} não encontrado.");
 
         // Verifica bloqueio financeiro (regra 7.3)
@@ -96,12 +96,100 @@ public class DocumentoService : IDocumentoService
             { "{{DATA_EMISSAO}}", DateTime.Now.ToString("dd/MM/yyyy") },
         };
 
+        var responsavel = aluno.ResponsavelFinanceiro ?? aluno;
+        
+        var hoje = DateTime.Now;
+        var idadeAluno = hoje.Year - aluno.DataNascimento.Year;
+        if (aluno.DataNascimento.Date > hoje.AddYears(-idadeAluno)) idadeAluno--;
+        
+        var idadeResp = hoje.Year - responsavel.DataNascimento.Year;
+        if (responsavel.DataNascimento.Date > hoje.AddYears(-idadeResp)) idadeResp--;
+
+        var valoresSistema = new Dictionary<string, string>
+        {
+            // Sistema
+            { "Sistema.DataEmissao", DateTime.Now.ToString("dd/MM/yyyy") },
+            // Curso & Turma
+            { "Curso.Nome", curso?.Nome ?? "" },
+            { "Curso.CargaHoraria", curso?.CargaHoraria.ToString() ?? "" },
+            { "Turma.Nome", turma?.Nome ?? "" },
+            { "Turma.DataInicio", turma?.DataInicio.ToString("dd/MM/yyyy") ?? "" },
+            { "Turma.DataFim", turma?.DataFim.ToString("dd/MM/yyyy") ?? "" },
+            // Aluno
+            { "Aluno.NomeCompleto", aluno.NomeCompleto },
+            { "Aluno.Idade", idadeAluno.ToString() },
+            { "Aluno.DataNascimento", aluno.DataNascimento.ToString("dd/MM/yyyy") },
+            { "Aluno.Naturalidade", aluno.Naturalidade },
+            { "Aluno.Nacionalidade", aluno.Nacionalidade },
+            { "Aluno.Sexo", aluno.Sexo.ToString() },
+            { "Aluno.EstadoCivil", aluno.EstadoCivil.ToString() },
+            { "Aluno.RG", aluno.RG },
+            { "Aluno.CPF", aluno.CPF },
+            { "Aluno.Logradouro", aluno.Logradouro },
+            { "Aluno.Numero", aluno.Numero },
+            { "Aluno.Bairro", aluno.Bairro },
+            { "Aluno.CEP", aluno.CEP },
+            { "Aluno.Cidade", aluno.Cidade },
+            { "Aluno.UF", aluno.Cidade.Length >= 2 && aluno.Cidade.Contains("-") ? aluno.Cidade.Split('-').Last().Trim().ToUpper() : "" },
+            { "Aluno.Telefone", aluno.Telefone },
+            { "Aluno.Email", aluno.Email },
+            { "Aluno.PontoReferencia", aluno.PontoReferencia ?? "" },
+            // Responsável/Contratante
+            { "Responsavel.NomeCompleto", responsavel.NomeCompleto },
+            { "Responsavel.Idade", idadeResp.ToString() },
+            { "Responsavel.DataNascimento", responsavel.DataNascimento.ToString("dd/MM/yyyy") },
+            { "Responsavel.Naturalidade", responsavel.Naturalidade },
+            { "Responsavel.Nacionalidade", responsavel.Nacionalidade },
+            { "Responsavel.Sexo", responsavel.Sexo.ToString() },
+            { "Responsavel.EstadoCivil", responsavel.EstadoCivil.ToString() },
+            { "Responsavel.RG", responsavel.RG },
+            { "Responsavel.CPF", responsavel.CPF },
+            { "Responsavel.Logradouro", responsavel.Logradouro },
+            { "Responsavel.Numero", responsavel.Numero },
+            { "Responsavel.Bairro", responsavel.Bairro },
+            { "Responsavel.CEP", responsavel.CEP },
+            { "Responsavel.Cidade", responsavel.Cidade },
+            { "Responsavel.UF", responsavel.Cidade.Length >= 2 && responsavel.Cidade.Contains("-") ? responsavel.Cidade.Split('-').Last().Trim().ToUpper() : "" },
+            { "Responsavel.Telefone", responsavel.Telefone },
+            { "Responsavel.Email", responsavel.Email },
+            { "Responsavel.PontoReferencia", responsavel.PontoReferencia ?? "" },
+            // Deprecated 
+            { "Pessoa.NomeCompleto", aluno.NomeCompleto },
+            { "Pessoa.CPF", aluno.CPF },
+            { "Pessoa.RG", aluno.RG },
+            { "Pessoa.IdFuncional", aluno.IdFuncional }
+        };
+
         // Se template existe, processa o arquivo DOCX
         if (template != null && !string.IsNullOrEmpty(template.CaminhoArquivo))
         {
-            // TODO: Implementar processamento de template DOCX com biblioteca como DocX
-            // Por enquanto retorna um PDF placeholder
-            return GeneratePlaceholderPdf(aluno.NomeCompleto, request.TipoDocumento.ToString(), placeholders);
+            var webRootPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot");
+            var absolutePath = System.IO.Path.Combine(webRootPath, template.CaminhoArquivo.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+            if (System.IO.File.Exists(absolutePath))
+            {
+                using var memoryStream = new System.IO.MemoryStream();
+                using (var doc = Xceed.Words.NET.DocX.Load(absolutePath))
+                {
+                    // Fallback para tags antigas caso estejam em uso no template
+                    foreach(var kvp in placeholders)
+                    {
+                        doc.ReplaceText(kvp.Key, kvp.Value);
+                    }
+                    
+                    // Substitui dinâmicas mapeadas
+                    if (template.Tags != null)
+                    {
+                        foreach(var tag in template.Tags)
+                        {
+                            var valor = valoresSistema.GetValueOrDefault(tag.CampoSistema, "");
+                            doc.ReplaceText(tag.TagNoDocumento, valor);
+                        }
+                    }
+                    
+                    doc.SaveAs(memoryStream);
+                }
+                return memoryStream.ToArray();
+            }
         }
 
         // Se não há template, gera um documento simples

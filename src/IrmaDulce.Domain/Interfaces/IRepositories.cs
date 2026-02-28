@@ -7,6 +7,7 @@ public interface IPessoaRepository : IRepository<Pessoa>
     Task<Pessoa?> GetByCpfAsync(string cpf);
     Task<Pessoa?> GetByIdFuncionalAsync(string idFuncional);
     Task<int> GetNextSequentialIdAsync(string prefix);
+    Task<Pessoa?> GetByIdWithResponsavelAsync(int id);
 }
 
 public interface IUsuarioRepository : IRepository<Usuario>
@@ -89,3 +90,9 @@ public interface ITemplateDocumentoRepository : IRepository<TemplateDocumento>
 {
     Task<TemplateDocumento?> GetByTipoAsync(IrmaDulce.Domain.Enums.TipoDocumento tipo);
 }
+
+public interface ITemplateTagRepository : IRepository<TemplateTag>
+{
+    Task<IEnumerable<TemplateTag>> GetByTemplateIdAsync(int templateId);
+}
+

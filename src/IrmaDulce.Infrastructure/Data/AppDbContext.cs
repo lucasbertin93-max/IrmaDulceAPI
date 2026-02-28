@@ -37,6 +37,7 @@ public class AppDbContext : DbContext
     // Configuração
     public DbSet<ConfiguracaoEscolar> ConfiguracoesEscolares => Set<ConfiguracaoEscolar>();
     public DbSet<TemplateDocumento> TemplatesDocumentos => Set<TemplateDocumento>();
+    public DbSet<TemplateTag> TemplateTags => Set<TemplateTag>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -307,8 +308,24 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TemplateDocumento>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.Tipo).IsUnique(); // Apenas um template ativo por tipo
             entity.Property(e => e.NomeArquivo).HasMaxLength(200);
             entity.Property(e => e.CaminhoArquivo).HasMaxLength(500);
+
+            entity.HasMany(e => e.Tags)
+                  .WithOne(t => t.TemplateDocumento)
+                  .HasForeignKey(t => t.TemplateDocumentoId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ========== TemplateTag ==========
+        modelBuilder.Entity<TemplateTag>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.TagNoDocumento).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.CampoSistema).HasMaxLength(100).IsRequired();
+            
+            entity.HasIndex(e => new { e.TemplateDocumentoId, e.TagNoDocumento }).IsUnique();
         });
 
         // Seed: Configuração escolar padrão

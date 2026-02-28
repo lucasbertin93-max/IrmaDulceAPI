@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<ICronogramaAulaRepository, CronogramaAulaRepository>();
         services.AddScoped<IConfiguracaoEscolarRepository, ConfiguracaoEscolarRepository>();
         services.AddScoped<ITemplateDocumentoRepository, TemplateDocumentoRepository>();
+        services.AddScoped<ITemplateTagRepository, TemplateTagRepository>();
 
         // Application Services
         services.AddScoped<IAuthService, AuthService>();
@@ -51,6 +52,7 @@ public static class DependencyInjection
         services.AddScoped<IFinanceiroService, FinanceiroService>();
         services.AddScoped<ICronogramaService, CronogramaService>();
         services.AddScoped<IConfiguracaoService, ConfiguracaoService>();
+        services.AddScoped<ITemplateService, TemplateService>();
 
         return services;
     }

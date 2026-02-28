@@ -49,6 +49,7 @@ public class PessoaService : IPessoaService
                 RG = resp.RG,
                 CPF = resp.CPF,
                 EstadoCivil = resp.EstadoCivil,
+                Sexo = resp.Sexo,
                 DataNascimento = resp.DataNascimento,
                 Naturalidade = resp.Naturalidade,
                 Nacionalidade = resp.Nacionalidade,
@@ -58,6 +59,8 @@ public class PessoaService : IPessoaService
                 Bairro = resp.Bairro,
                 Cidade = resp.Cidade,
                 PontoReferencia = resp.PontoReferencia,
+                Telefone = resp.Telefone,
+                Email = resp.Email,
                 NomePai = resp.NomePai,
                 NomeMae = resp.NomeMae,
             };
@@ -73,6 +76,7 @@ public class PessoaService : IPessoaService
             RG = request.RG,
             CPF = request.CPF,
             EstadoCivil = request.EstadoCivil,
+            Sexo = request.Sexo,
             DataNascimento = request.DataNascimento,
             Naturalidade = request.Naturalidade,
             Nacionalidade = request.Nacionalidade,
@@ -82,6 +86,8 @@ public class PessoaService : IPessoaService
             Bairro = request.Bairro,
             Cidade = request.Cidade,
             PontoReferencia = request.PontoReferencia,
+            Telefone = request.Telefone,
+            Email = request.Email,
             NomePai = request.NomePai,
             NomeMae = request.NomeMae,
             ResponsavelFinanceiroId = responsavelId,
@@ -149,6 +155,7 @@ public class PessoaService : IPessoaService
         pessoa.RG = request.RG;
         pessoa.CPF = request.CPF;
         pessoa.EstadoCivil = request.EstadoCivil;
+        pessoa.Sexo = request.Sexo;
         pessoa.DataNascimento = request.DataNascimento;
         pessoa.Naturalidade = request.Naturalidade;
         pessoa.Nacionalidade = request.Nacionalidade;
@@ -158,6 +165,8 @@ public class PessoaService : IPessoaService
         pessoa.Bairro = request.Bairro;
         pessoa.Cidade = request.Cidade;
         pessoa.PontoReferencia = request.PontoReferencia;
+        pessoa.Telefone = request.Telefone;
+        pessoa.Email = request.Email;
         pessoa.NomePai = request.NomePai;
         pessoa.NomeMae = request.NomeMae;
         pessoa.ResponsavelFinanceiroId = request.ResponsavelFinanceiroId;
@@ -190,6 +199,7 @@ public class PessoaService : IPessoaService
         CPF: p.CPF,
         RG: p.RG,
         EstadoCivil: p.EstadoCivil,
+        Sexo: p.Sexo,
         DataNascimento: p.DataNascimento,
         Naturalidade: p.Naturalidade,
         Nacionalidade: p.Nacionalidade,
@@ -199,6 +209,8 @@ public class PessoaService : IPessoaService
         Bairro: p.Bairro,
         Cidade: p.Cidade,
         PontoReferencia: p.PontoReferencia,
+        Telefone: p.Telefone,
+        Email: p.Email,
         NomePai: p.NomePai,
         NomeMae: p.NomeMae,
         Perfil: p.Perfil,

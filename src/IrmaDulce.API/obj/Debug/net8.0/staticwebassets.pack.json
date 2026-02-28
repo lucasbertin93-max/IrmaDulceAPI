@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\Contrato_20260227144817.docx",
+      "PackagePath": "staticwebassets\\templates\\Contrato_20260227144817.docx"
+    },
+    {
+      "Id": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\Contrato_20260227173920.docx",
+      "PackagePath": "staticwebassets\\templates\\Contrato_20260227173920.docx"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.IrmaDulce.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.IrmaDulce.API.props",
+      "PackagePath": "build\\IrmaDulce.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.IrmaDulce.API.props",
+      "PackagePath": "buildMultiTargeting\\IrmaDulce.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.IrmaDulce.API.props",
+      "PackagePath": "buildTransitive\\IrmaDulce.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
