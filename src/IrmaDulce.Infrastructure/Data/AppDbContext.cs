@@ -132,11 +132,11 @@ public class AppDbContext : DbContext
             entity.HasIndex(e => new { e.TurmaId, e.DisciplinaId }).IsUnique();
 
             entity.HasOne(e => e.Turma)
-                  .WithMany()
+                  .WithMany(t => t.TurmaDisciplinas)
                   .HasForeignKey(e => e.TurmaId);
 
             entity.HasOne(e => e.Disciplina)
-                  .WithMany()
+                  .WithMany(d => d.TurmaDisciplinas)
                   .HasForeignKey(e => e.DisciplinaId);
 
             entity.HasOne(e => e.Docente)
@@ -237,6 +237,10 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Valor).HasPrecision(10, 2);
+            entity.Property(e => e.DescontoPontualidade).HasPrecision(10, 2);
+            // Store TipoDesconto enum as string in DB to avoid int/string mismatch
+            entity.Property(e => e.TipoDescontoPontualidade)
+                  .HasConversion<string>();
 
             entity.HasOne(e => e.Aluno)
                   .WithMany(p => p.Mensalidades)

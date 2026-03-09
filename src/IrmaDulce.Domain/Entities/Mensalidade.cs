@@ -21,6 +21,10 @@ public class Mensalidade
 
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 
+    // Desconto de pontualidade
+    public decimal? DescontoPontualidade { get; set; }
+    public TipoDesconto? TipoDescontoPontualidade { get; set; }
+
     // Navegação
     public PagamentoEscola? PagamentoEscola { get; set; }
 }

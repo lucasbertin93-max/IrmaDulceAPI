@@ -6,5 +6,6 @@ public enum TipoDocumento
     DocumentoEstagio = 2,
     DeclaracaoConclusao = 3,
     Certificado = 4,
-    LiberacaoEstagio = 5
+    LiberacaoEstagio = 5,
+    HistoricoEscolar = 6
 }

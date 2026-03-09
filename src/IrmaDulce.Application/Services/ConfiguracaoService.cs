@@ -19,7 +19,10 @@ public class ConfiguracaoService : IConfiguracaoService
         return new ConfiguracaoResponse(
             MediaMinimaAprovacao: config.MediaMinimaAprovacao,
             FrequenciaMinimaPercent: config.FrequenciaMinimaPercent,
-            HorasAulaPadraoPorDia: config.HorasAulaPadraoPorDia
+            HorasAulaPadraoPorDia: config.HorasAulaPadraoPorDia,
+            PrazoMaximoParcelamento: config.PrazoMaximoParcelamento,
+            MultaAtrasoPercent: config.MultaAtrasoPercent,
+            JurosMensalPercent: config.JurosMensalPercent
         );
     }
 
@@ -30,6 +33,9 @@ public class ConfiguracaoService : IConfiguracaoService
         config.MediaMinimaAprovacao = request.MediaMinimaAprovacao;
         config.FrequenciaMinimaPercent = request.FrequenciaMinimaPercent;
         config.HorasAulaPadraoPorDia = request.HorasAulaPadraoPorDia;
+        config.PrazoMaximoParcelamento = request.PrazoMaximoParcelamento;
+        config.MultaAtrasoPercent = request.MultaAtrasoPercent;
+        config.JurosMensalPercent = request.JurosMensalPercent;
         config.UltimaAtualizacao = DateTime.UtcNow;
 
         await _configRepo.UpdateAsync(config);
@@ -37,7 +43,10 @@ public class ConfiguracaoService : IConfiguracaoService
         return new ConfiguracaoResponse(
             MediaMinimaAprovacao: config.MediaMinimaAprovacao,
             FrequenciaMinimaPercent: config.FrequenciaMinimaPercent,
-            HorasAulaPadraoPorDia: config.HorasAulaPadraoPorDia
+            HorasAulaPadraoPorDia: config.HorasAulaPadraoPorDia,
+            PrazoMaximoParcelamento: config.PrazoMaximoParcelamento,
+            MultaAtrasoPercent: config.MultaAtrasoPercent,
+            JurosMensalPercent: config.JurosMensalPercent
         );
     }
 }

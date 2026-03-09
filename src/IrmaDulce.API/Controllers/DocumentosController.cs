@@ -21,6 +21,7 @@ public class DocumentosController : ControllerBase
     [HttpPost("emitir")]
     public async Task<IActionResult> EmitirDocumento([FromBody] EmitirDocumentoRequest request)
     {
+        Console.WriteLine($"[DEBUG] Emitindo doc -> Aluno: {request.AlunoId} | Tipo: {request.TipoDocumento}");
         try
         {
             var operadorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
@@ -38,6 +39,11 @@ public class DocumentosController : ControllerBase
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[DocumentosController.EmitirDocumento] UNHANDLED {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            return BadRequest(new { message = $"[DEV] {ex.Message} -> {ex.InnerException?.Message}" });
         }
     }
 }
@@ -126,7 +132,7 @@ public class CronogramaController : ControllerBase
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Master")]
+[Authorize(Roles = "Master,Administrativo")]
 public class ConfiguracoesController : ControllerBase
 {
     private readonly IConfiguracaoService _configuracaoService;
@@ -144,6 +150,7 @@ public class ConfiguracoesController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Roles = "Master")]
     public async Task<ActionResult<ConfiguracaoResponse>> Atualizar([FromBody] ConfiguracaoRequest request)
     {
         var config = await _configuracaoService.AtualizarAsync(request);

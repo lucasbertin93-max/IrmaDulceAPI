@@ -9,6 +9,22 @@
       "PackagePath": "staticwebassets\\templates\\Contrato_20260227173920.docx"
     },
     {
+      "Id": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\Contrato_20260228190841.docx",
+      "PackagePath": "staticwebassets\\templates\\Contrato_20260228190841.docx"
+    },
+    {
+      "Id": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\HistoricoEscolar_20260302181423.docx",
+      "PackagePath": "staticwebassets\\templates\\HistoricoEscolar_20260302181423.docx"
+    },
+    {
+      "Id": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\HistoricoEscolar_20260302181850.docx",
+      "PackagePath": "staticwebassets\\templates\\HistoricoEscolar_20260302181850.docx"
+    },
+    {
+      "Id": "C:\\Projects\\Irma Dulce\\backend\\src\\IrmaDulce.API\\wwwroot\\templates\\HistoricoEscolar_20260302182009.docx",
+      "PackagePath": "staticwebassets\\templates\\HistoricoEscolar_20260302182009.docx"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.IrmaDulce.API.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

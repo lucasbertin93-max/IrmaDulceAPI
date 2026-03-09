@@ -35,6 +35,11 @@ public class Pessoa
     // Responsável Financeiro
     public int? ResponsavelFinanceiroId { get; set; }
     public Pessoa? ResponsavelFinanceiro { get; set; }
+    // Vencimento Mensalidade
+    public int? DiaVencimento { get; set; }
+    
+    // Configurações de Parcelamento
+    public int? QuantidadeParcelas { get; set; }
 
     public bool Ativo { get; set; } = true;
     public DateTime DataCadastro { get; set; } = DateTime.UtcNow;

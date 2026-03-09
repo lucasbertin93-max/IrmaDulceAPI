@@ -88,9 +88,18 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<int>("HorasAulaPadraoPorDia")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("JurosMensalPercent")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("MediaMinimaAprovacao")
                         .HasPrecision(5, 2)
                         .HasColumnType("TEXT");
+
+                    b.Property<decimal>("MultaAtrasoPercent")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PrazoMaximoParcelamento")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UltimaAtualizacao")
                         .HasColumnType("TEXT");
@@ -105,7 +114,10 @@ namespace IrmaDulce.Infrastructure.Migrations
                             Id = 1,
                             FrequenciaMinimaPercent = 75.0m,
                             HorasAulaPadraoPorDia = 4,
+                            JurosMensalPercent = 1.0m,
                             MediaMinimaAprovacao = 7.0m,
+                            MultaAtrasoPercent = 2.0m,
+                            PrazoMaximoParcelamento = 26,
                             UltimaAtualizacao = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
@@ -374,10 +386,16 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<DateTime>("DataVencimento")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal?>("DescontoPontualidade")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("MesReferencia")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TipoDescontoPontualidade")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Valor")
@@ -493,6 +511,9 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("DiaVencimento")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -541,6 +562,9 @@ namespace IrmaDulce.Infrastructure.Migrations
 
                     b.Property<string>("PontoReferencia")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("QuantidadeParcelas")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("RG")
                         .IsRequired()
@@ -714,27 +738,17 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<int>("DisciplinaId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("DisciplinaId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("DocenteId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TurmaId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TurmaId1")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DisciplinaId");
 
-                    b.HasIndex("DisciplinaId1");
-
                     b.HasIndex("DocenteId");
-
-                    b.HasIndex("TurmaId1");
 
                     b.HasIndex("TurmaId", "DisciplinaId")
                         .IsUnique();
@@ -1007,14 +1021,10 @@ namespace IrmaDulce.Infrastructure.Migrations
             modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDisciplina", b =>
                 {
                     b.HasOne("IrmaDulce.Domain.Entities.Disciplina", "Disciplina")
-                        .WithMany()
+                        .WithMany("TurmaDisciplinas")
                         .HasForeignKey("DisciplinaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("IrmaDulce.Domain.Entities.Disciplina", null)
-                        .WithMany("TurmaDisciplinas")
-                        .HasForeignKey("DisciplinaId1");
 
                     b.HasOne("IrmaDulce.Domain.Entities.Pessoa", "Docente")
                         .WithMany()
@@ -1022,14 +1032,10 @@ namespace IrmaDulce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("IrmaDulce.Domain.Entities.Turma", "Turma")
-                        .WithMany()
+                        .WithMany("TurmaDisciplinas")
                         .HasForeignKey("TurmaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("IrmaDulce.Domain.Entities.Turma", null)
-                        .WithMany("TurmaDisciplinas")
-                        .HasForeignKey("TurmaId1");
 
                     b.Navigation("Disciplina");
 

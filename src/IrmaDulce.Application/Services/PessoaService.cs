@@ -63,6 +63,8 @@ public class PessoaService : IPessoaService
                 Email = resp.Email,
                 NomePai = resp.NomePai,
                 NomeMae = resp.NomeMae,
+                DiaVencimento = resp.DiaVencimento,
+                QuantidadeParcelas = resp.QuantidadeParcelas
             };
             await _pessoaRepo.AddAsync(responsavel);
             responsavelId = responsavel.Id;
@@ -91,6 +93,8 @@ public class PessoaService : IPessoaService
             NomePai = request.NomePai,
             NomeMae = request.NomeMae,
             ResponsavelFinanceiroId = responsavelId,
+            DiaVencimento = request.DiaVencimento,
+            QuantidadeParcelas = request.QuantidadeParcelas
         };
 
         await _pessoaRepo.AddAsync(pessoa);
@@ -170,6 +174,8 @@ public class PessoaService : IPessoaService
         pessoa.NomePai = request.NomePai;
         pessoa.NomeMae = request.NomeMae;
         pessoa.ResponsavelFinanceiroId = request.ResponsavelFinanceiroId;
+        pessoa.DiaVencimento = request.DiaVencimento;
+        pessoa.QuantidadeParcelas = request.QuantidadeParcelas;
 
         await _pessoaRepo.UpdateAsync(pessoa);
         return MapToResponse(pessoa);
@@ -215,6 +221,8 @@ public class PessoaService : IPessoaService
         NomeMae: p.NomeMae,
         Perfil: p.Perfil,
         Ativo: p.Ativo,
-        ResponsavelFinanceiroId: p.ResponsavelFinanceiroId
+        ResponsavelFinanceiroId: p.ResponsavelFinanceiroId,
+        DiaVencimento: p.DiaVencimento,
+        QuantidadeParcelas: p.QuantidadeParcelas
     );
 }

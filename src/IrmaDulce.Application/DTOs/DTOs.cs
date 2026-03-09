@@ -30,7 +30,9 @@ public record PessoaCreateRequest(
     PerfilUsuario Perfil,
     int? ResponsavelFinanceiroId,
     // Dados do responsável financeiro (quando não é o aluno)
-    PessoaCreateRequest? ResponsavelFinanceiro
+    PessoaCreateRequest? ResponsavelFinanceiro,
+    int? DiaVencimento,
+    int? QuantidadeParcelas
 );
 
 public record PessoaResponse(
@@ -56,7 +58,9 @@ public record PessoaResponse(
     string NomeMae,
     PerfilUsuario Perfil,
     bool Ativo,
-    int? ResponsavelFinanceiroId
+    int? ResponsavelFinanceiroId,
+    int? DiaVencimento,
+    int? QuantidadeParcelas
 );
 
 // ==================== Curso ====================
@@ -97,15 +101,16 @@ public record AvaliacaoResponse(int Id, string Nome, string? Descricao, DateTime
 public record NotaRequest(int AlunoId, int AvaliacaoId, decimal Nota, string? Observacao);
 
 // ==================== Mensalidade ====================
-public record GerarMensalidadesRequest(int MesReferencia, int AnoReferencia, decimal Valor, DateTime DataVencimento);
-public record GerarBoletosAlunoRequest(int AlunoId, int QtdParcelas, decimal ValorParcela, DateTime PrimeiroVencimento);
+public record GerarMensalidadesRequest(int MesReferencia, int AnoReferencia, decimal Valor, DateTime DataVencimento, decimal? DescontoPontualidade = null, TipoDesconto? TipoDescontoPontualidade = null);
+public record GerarBoletosAlunoRequest(int AlunoId, int QtdParcelas, decimal ValorParcela, DateTime PrimeiroVencimento, decimal? DescontoPontualidade = null, TipoDesconto? TipoDescontoPontualidade = null);
 public record RegistrarPagamentoRequest(int MensalidadeId, decimal ValorPago, MetodoPagamento MetodoPagamento, DateTime DataPagamento, string? Observacao);
 public record MensalidadeResponse(
     int Id, int AlunoId, string AlunoNome, string AlunoIdFuncional,
     int MesReferencia, int AnoReferencia, decimal Valor,
     DateTime DataVencimento, DateTime? DataPagamento, StatusMensalidade Status,
     string? ResponsavelNome, string? EnderecoCompleto, string? TurmaNome,
-    int NumeroParcela, int TotalParcelas);
+    int NumeroParcela, int TotalParcelas,
+    decimal? DescontoPontualidade = null, TipoDesconto? TipoDescontoPontualidade = null);
 
 // ==================== Financeiro ====================
 public record LancamentoRequest(DateTime Data, string Descricao, decimal Valor, TipoLancamento Tipo, int? CategoriaId);
@@ -118,12 +123,18 @@ public record CronogramaResponse(int Id, int TurmaId, string TurmaNome, int Disc
 public record ConflitoCronogramaResponse(string Tipo, string Mensagem);
 
 // ==================== Configuração ====================
-public record ConfiguracaoRequest(decimal MediaMinimaAprovacao, decimal FrequenciaMinimaPercent, int HorasAulaPadraoPorDia);
-public record ConfiguracaoResponse(decimal MediaMinimaAprovacao, decimal FrequenciaMinimaPercent, int HorasAulaPadraoPorDia);
+public record ConfiguracaoRequest(decimal MediaMinimaAprovacao, decimal FrequenciaMinimaPercent, int HorasAulaPadraoPorDia, int PrazoMaximoParcelamento, decimal MultaAtrasoPercent, decimal JurosMensalPercent);
+public record ConfiguracaoResponse(decimal MediaMinimaAprovacao, decimal FrequenciaMinimaPercent, int HorasAulaPadraoPorDia, int PrazoMaximoParcelamento, decimal MultaAtrasoPercent, decimal JurosMensalPercent);
 
 // ==================== Documento ====================
-public record EmitirDocumentoRequest(
-    int AlunoId, 
-    [property: System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))] TipoDocumento TipoDocumento, 
-    string? SenhaMasterOverride
-);
+public record EmitirDocumentoRequest
+{
+    public int AlunoId { get; init; }
+    public string TipoDocumento { get; init; } = string.Empty;
+    public string? SenhaMasterOverride { get; init; }
+    
+    public TipoDocumento GetTipoDocumentoEnum()
+    {
+        return Enum.Parse<TipoDocumento>(TipoDocumento, true);
+    }
+}

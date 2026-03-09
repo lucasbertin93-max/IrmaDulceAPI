@@ -1,0 +1,8 @@
+﻿C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\Services\DocumentoService.cs(213,45): error CS1061: ÔÇÿDocXÔÇÖ n├úo cont├®m uma defini├º├úo para "InsertTableAfterSelf" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "InsertTableAfterSelf" que aceite um primeiro argumento do tipo ÔÇÿDocXÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\IrmaDulce.Application.csproj]
+C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\Services\DocumentoService.cs(216,44): error CS0234: O nome de tipo ou namespace "TableDesign" n├úo existe no namespace "Xceed.Words.NET" (voc├¬ est├í sem uma refer├¬ncia de assembly?) [C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\IrmaDulce.Application.csproj]
+
+FALHA da compila├º├úo.
+    4 Aviso(s)
+    2 Erro(s)
+
+Tempo Decorrido 00:00:01.20

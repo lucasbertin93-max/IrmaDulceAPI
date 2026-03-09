@@ -91,6 +91,7 @@ public interface IFinanceiroService
     Task<MensalidadeResponse> AtualizarMensalidadeAsync(int id, decimal valor, DateTime dataVencimento);
     Task DeletarMensalidadeAsync(int id);
     Task<LancamentoResponse> AdicionarLancamentoAsync(LancamentoRequest request);
+    Task<LancamentoResponse> AtualizarLancamentoAsync(int id, LancamentoRequest request);
     Task<IEnumerable<LancamentoResponse>> GetLancamentosAsync(DateTime inicio, DateTime fim, TipoLancamento? tipo);
     Task<DashboardFinanceiroResponse> GetDashboardAsync(DateTime inicio, DateTime fim);
 }

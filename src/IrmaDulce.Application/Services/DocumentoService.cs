@@ -17,6 +17,8 @@ public class DocumentoService : IDocumentoService
     private readonly IMatriculaRepository _matriculaRepo;
     private readonly ICursoRepository _cursoRepo;
     private readonly ITurmaRepository _turmaRepo;
+    private readonly IAvaliacaoRepository _avaliacaoRepo;
+    private readonly INotaAlunoRepository _notaRepo;
 
     public DocumentoService(
         IMensalidadeRepository mensalidadeRepo,
@@ -25,7 +27,9 @@ public class DocumentoService : IDocumentoService
         IPessoaRepository pessoaRepo,
         IMatriculaRepository matriculaRepo,
         ICursoRepository cursoRepo,
-        ITurmaRepository turmaRepo)
+        ITurmaRepository turmaRepo,
+        IAvaliacaoRepository avaliacaoRepo,
+        INotaAlunoRepository notaRepo)
     {
         _mensalidadeRepo = mensalidadeRepo;
         _usuarioRepo = usuarioRepo;
@@ -34,6 +38,8 @@ public class DocumentoService : IDocumentoService
         _matriculaRepo = matriculaRepo;
         _cursoRepo = cursoRepo;
         _turmaRepo = turmaRepo;
+        _avaliacaoRepo = avaliacaoRepo;
+        _notaRepo = notaRepo;
     }
 
     public async Task<byte[]> EmitirDocumentoAsync(EmitirDocumentoRequest request, int operadorId)
@@ -66,7 +72,8 @@ public class DocumentoService : IDocumentoService
         }
 
         // Busca template do documento
-        var template = await _templateRepo.GetByTipoAsync(request.TipoDocumento);
+        var tipoDocEnum = request.GetTipoDocumentoEnum();
+        var template = await _templateRepo.GetByTipoAsync(tipoDocEnum);
 
         // Busca dados para preenchimento dos placeholders
         var matriculas = await _matriculaRepo.GetByAlunoIdAsync(request.AlunoId);
@@ -183,6 +190,86 @@ public class DocumentoService : IDocumentoService
                         {
                             var valor = valoresSistema.GetValueOrDefault(tag.CampoSistema, "");
                             doc.ReplaceText(tag.TagNoDocumento, valor);
+                        }
+                    }
+
+                    // Tabela Dinâmica do Histórico Escolar
+                    if (tipoDocEnum == Domain.Enums.TipoDocumento.HistoricoEscolar && turma != null)
+                    {
+                        var tagHistorico = "{{TABELA_HISTORICO}}";
+                        var tagParagraph = doc.Paragraphs.FirstOrDefault(p => p.Text.Contains(tagHistorico));
+                        
+                        if (tagParagraph != null)
+                        {
+                            // Remove a tag do parágrafo (o texto)
+                            tagParagraph.ReplaceText(tagHistorico, string.Empty);
+                            
+                            // Busca disciplinas vinculadas à turma do aluno
+                            var turmaComDisciplinas = await _turmaRepo.GetWithDisciplinasAsync(turma.Id);
+                            var disciplinasDaTurma = turmaComDisciplinas?.TurmaDisciplinas ?? new List<Domain.Entities.TurmaDisciplina>();
+                            
+                            // Cria a tabela Xceed: header + linhas disciplinas + footer = disciplinas + 2
+                            var rowCount = disciplinasDaTurma.Count + 2;
+                            var colCount = 3;
+                            var table = tagParagraph.InsertTableAfterSelf(rowCount, colCount);
+
+                            // Opções de design: TableDesign.LightShadingAccent1 dá uma aparência bonita em tons de azul.
+                            table.Design = Xceed.Document.NET.TableDesign.LightShadingAccent1;
+                            table.Alignment = Xceed.Document.NET.Alignment.center;
+                            
+                            // Cabeçalho
+                            table.Rows[0].Cells[0].Paragraphs[0].Append("Componentes Curriculares - Teoria").Bold().Alignment = Xceed.Document.NET.Alignment.center;
+                            table.Rows[0].Cells[1].Paragraphs[0].Append("Carga Horária").Bold().Alignment = Xceed.Document.NET.Alignment.center;
+                            table.Rows[0].Cells[2].Paragraphs[0].Append("Média").Bold().Alignment = Xceed.Document.NET.Alignment.center;
+                            for (int i = 0; i < colCount; i++) { table.Rows[0].Cells[i].VerticalAlignment = Xceed.Document.NET.VerticalAlignment.Center; }
+
+                            // Linhas
+                            int rowIndex = 1;
+                            int totalCargaHoraria = 0;
+                            var todasNotasAluno = await _notaRepo.FindAsync(n => n.AlunoId == aluno.Id);
+                            var todasAvaliacoesTurma = await _avaliacaoRepo.FindAsync(a => a.TurmaId == turma.Id);
+
+                            foreach (var td in disciplinasDaTurma)
+                            {
+                                var d = td.Disciplina;
+                                totalCargaHoraria += d.CargaHoraria;
+                                
+                                // Calculando média da disciplina para este aluno
+                                var avaliacoesMateria = todasAvaliacoesTurma.Where(a => a.DisciplinaId == d.Id).ToList();
+                                decimal mediaFinal = 0;
+                                
+                                if (avaliacoesMateria.Any())
+                                {
+                                    decimal somaNxP = 0;
+                                    decimal somaP = 0;
+                                    
+                                    foreach (var av in avaliacoesMateria)
+                                    {
+                                        var n = todasNotasAluno.FirstOrDefault(na => na.AvaliacaoId == av.Id);
+                                        if (n != null)
+                                        {
+                                            somaNxP += (n.Nota * av.Peso);
+                                        }
+                                        somaP += av.Peso;
+                                    }
+                                    
+                                    if (somaP > 0) mediaFinal = Math.Round(somaNxP / somaP, 2);
+                                }
+
+                                table.Rows[rowIndex].Cells[0].Paragraphs[0].Append(d.Nome);
+                                table.Rows[rowIndex].Cells[1].Paragraphs[0].Append($"{d.CargaHoraria} h").Alignment = Xceed.Document.NET.Alignment.center;
+                                table.Rows[rowIndex].Cells[2].Paragraphs[0].Append(mediaFinal.ToString("0.0")).Alignment = Xceed.Document.NET.Alignment.center;
+                                
+                                rowIndex++;
+                            } // Fim foreach disciplinas
+                            
+                            // Rodapé (Total Carga Horária)
+                            table.Rows[rowIndex].Cells[0].Paragraphs[0].Append("ESTÁGIO SUPERVISIONADO").Bold();
+                            table.Rows[rowIndex].Cells[1].Paragraphs[0].Append("Carga Horária 400 h").Bold().Alignment = Xceed.Document.NET.Alignment.center;
+                            table.Rows[rowIndex].Cells[2].Paragraphs[0].Append("-").Bold().Alignment = Xceed.Document.NET.Alignment.center;
+                            
+                            // Adjusting widths based on image reference template
+                            table.SetWidths(new float[] { 300f, 120f, 80f });
                         }
                     }
                     

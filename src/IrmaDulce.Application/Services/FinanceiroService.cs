@@ -52,6 +52,8 @@ public class FinanceiroService : IFinanceiroService
                 AnoReferencia = request.AnoReferencia,
                 Valor = request.Valor,
                 DataVencimento = request.DataVencimento,
+                DescontoPontualidade = request.DescontoPontualidade,
+                TipoDescontoPontualidade = request.TipoDescontoPontualidade,
                 Status = StatusMensalidade.EmAberto,
             };
 
@@ -74,6 +76,8 @@ public class FinanceiroService : IFinanceiroService
                 AnoReferencia = vencimento.Year,
                 Valor = request.ValorParcela,
                 DataVencimento = vencimento,
+                DescontoPontualidade = request.DescontoPontualidade,
+                TipoDescontoPontualidade = request.TipoDescontoPontualidade,
                 Status = StatusMensalidade.EmAberto,
             };
             await _mensalidadeRepo.AddAsync(mensalidade);
@@ -192,6 +196,29 @@ public class FinanceiroService : IFinanceiroService
         );
     }
 
+    public async Task<LancamentoResponse> AtualizarLancamentoAsync(int id, LancamentoRequest request)
+    {
+        var lancamento = await _lancamentoRepo.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"Lançamento com ID {id} não encontrado.");
+
+        lancamento.Data = request.Data;
+        lancamento.Descricao = request.Descricao;
+        lancamento.Valor = request.Valor;
+        lancamento.Tipo = request.Tipo;
+        lancamento.CategoriaId = request.CategoriaId;
+
+        await _lancamentoRepo.UpdateAsync(lancamento);
+
+        return new LancamentoResponse(
+            Id: lancamento.Id,
+            Data: lancamento.Data,
+            Descricao: lancamento.Descricao,
+            Valor: lancamento.Valor,
+            Tipo: lancamento.Tipo,
+            CategoriaNome: lancamento.Categoria?.Nome
+        );
+    }
+
     public async Task<IEnumerable<LancamentoResponse>> GetLancamentosAsync(
         DateTime inicio, DateTime fim, TipoLancamento? tipo)
     {
@@ -296,7 +323,9 @@ public class FinanceiroService : IFinanceiroService
             EnderecoCompleto: endereco,
             TurmaNome: turmaNome,
             NumeroParcela: numParcela,
-            TotalParcelas: totalParcelas
+            TotalParcelas: totalParcelas,
+            DescontoPontualidade: m.DescontoPontualidade,
+            TipoDescontoPontualidade: m.TipoDescontoPontualidade
         );
     }
 }

@@ -116,6 +116,17 @@ public class FinanceiroController : ControllerBase
         var lancamento = await _financeiroService.AdicionarLancamentoAsync(request);
         return Created("", lancamento);
     }
+
+    [HttpPut("lancamentos/{id}")]
+    public async Task<ActionResult<LancamentoResponse>> AtualizarLancamento(int id, [FromBody] LancamentoRequest request)
+    {
+        try
+        {
+            var lancamento = await _financeiroService.AtualizarLancamentoAsync(id, request);
+            return Ok(lancamento);
+        }
+        catch (KeyNotFoundException) { return NotFound(); }
+    }
 }
 
 /// <summary>

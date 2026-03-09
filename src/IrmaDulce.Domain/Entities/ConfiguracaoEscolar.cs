@@ -22,5 +22,20 @@ public class ConfiguracaoEscolar
     /// </summary>
     public int HorasAulaPadraoPorDia { get; set; } = 4;
 
+    /// <summary>
+    /// Limite máximo de parcelas permitidas na escola (padrão: 26).
+    /// </summary>
+    public int PrazoMaximoParcelamento { get; set; } = 26;
+
+    /// <summary>
+    /// Multa de atraso em % (padrão: 2.0%).
+    /// </summary>
+    public decimal MultaAtrasoPercent { get; set; } = 2.0m;
+
+    /// <summary>
+    /// Juros mensais em % (padrão: 1.0%).
+    /// </summary>
+    public decimal JurosMensalPercent { get; set; } = 1.0m;
+
     public DateTime UltimaAtualizacao { get; set; } = DateTime.UtcNow;
 }
