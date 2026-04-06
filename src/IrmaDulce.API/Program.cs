@@ -1,17 +1,28 @@
 using System.Text;
 using IrmaDulce.Infrastructure;
 using IrmaDulce.Infrastructure.Data;
+using IrmaDulce.API.BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ========== Logging (Serilog) ==========
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration));
 
 // ========== Services ==========
 
 // Infrastructure (DbContext + Repositories + Application Services)
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Background Services
+builder.Services.AddSingleton<DocumentProcessingChannel>();
+builder.Services.AddSingleton<DocumentJobCache>();
+builder.Services.AddHostedService<DocumentProcessingWorker>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "IrmaDulce-SecretKey-Dev-2026-SuperSegura-256bits!";
@@ -142,5 +153,7 @@ if (app.Environment.IsDevelopment())
         Console.WriteLine("✅ Usuário Master criado: login='admin' senha='123456'");
     }
 }
+
+app.UseSerilogRequestLogging();
 
 app.Run();

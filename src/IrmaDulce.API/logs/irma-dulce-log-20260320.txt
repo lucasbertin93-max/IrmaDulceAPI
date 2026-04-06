@@ -1,0 +1,36 @@
+[2026-03-20 09:49:24.270] [INF] HTTP POST /api/auth/login responded 401 in 4302.9192 ms
+[2026-03-20 09:50:01.204] [INF] HTTP POST /api/auth/login responded 401 in 682.0351 ms
+[2026-03-20 09:50:30.731] [INF] HTTP POST /api/auth/login responded 401 in 541.2219 ms
+[2026-03-20 09:50:52.616] [INF] HTTP POST /api/auth/login responded 401 in 484.7426 ms
+[2026-03-20 09:53:10.669] [INF] HTTP POST /api/auth/login responded 401 in 556.8220 ms
+[2026-03-20 09:53:55.397] [INF] HTTP POST /api/auth/login responded 401 in 617.5062 ms
+[2026-03-20 09:54:37.758] [INF] HTTP POST /api/auth/login responded 401 in 555.7453 ms
+[2026-03-20 09:55:43.557] [INF] HTTP POST /api/auth/login responded 401 in 614.9014 ms
+[2026-03-20 09:57:08.625] [INF] HTTP POST /api/auth/login responded 401 in 632.3011 ms
+[2026-03-20 09:57:58.487] [INF] HTTP POST /api/auth/login responded 401 in 606.0860 ms
+[2026-03-20 09:58:51.292] [INF] HTTP POST /api/auth/login responded 401 in 801.2184 ms
+[2026-03-20 09:59:49.050] [INF] HTTP POST /api/auth/login responded 401 in 711.5709 ms
+[2026-03-20 10:00:31.253] [INF] HTTP POST /api/auth/login responded 401 in 672.6363 ms
+[2026-03-20 10:01:10.695] [INF] HTTP POST /api/auth/login responded 401 in 811.7335 ms
+[2026-03-20 18:15:16.033] [INF] DocumentProcessingWorker is starting.
+[2026-03-20 18:15:16.155] [INF] Now listening on: http://localhost:5079
+[2026-03-20 18:15:16.159] [INF] Application started. Press Ctrl+C to shut down.
+[2026-03-20 18:15:16.162] [INF] Hosting environment: Development
+[2026-03-20 18:15:16.163] [INF] Content root path: C:\Projects\Irma Dulce\backend\src\IrmaDulce.API
+[2026-03-20 18:17:15.786] [INF] HTTP POST /api/auth/login responded 200 in 1526.4259 ms
+[2026-03-20 18:17:16.092] [INF] HTTP GET /api/turmas responded 200 in 201.9278 ms
+[2026-03-20 18:17:16.093] [INF] HTTP GET /api/pessoas responded 200 in 203.1642 ms
+[2026-03-20 18:17:16.093] [INF] HTTP GET /api/pessoas responded 200 in 203.1088 ms
+[2026-03-20 18:17:16.117] [INF] HTTP GET /api/turmas responded 200 in 10.6565 ms
+[2026-03-20 18:17:16.118] [INF] HTTP GET /api/pessoas responded 200 in 9.5509 ms
+[2026-03-20 18:17:16.118] [INF] HTTP GET /api/pessoas responded 200 in 9.3677 ms
+[2026-03-20 18:17:16.306] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 145.2848 ms
+[2026-03-20 18:17:16.332] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 13.5894 ms
+[2026-03-20 18:17:24.803] [INF] HTTP GET /api/turmas responded 200 in 18.4435 ms
+[2026-03-20 18:17:24.809] [INF] HTTP GET /api/cursos responded 200 in 25.4681 ms
+[2026-03-20 18:17:24.822] [INF] HTTP GET /api/turmas responded 200 in 6.7325 ms
+[2026-03-20 18:17:24.828] [INF] HTTP GET /api/cursos responded 200 in 4.3095 ms
+[2026-03-20 18:17:27.079] [INF] HTTP GET /api/turmas/1/dias-letivos responded 200 in 247.2912 ms
+[2026-03-20 18:17:35.206] [INF] HTTP GET /api/pessoas responded 200 in 8.4718 ms
+[2026-03-20 18:17:35.214] [INF] HTTP GET /api/turmas/1/dias-letivos responded 200 in 7.7867 ms
+[2026-03-20 18:17:35.400] [INF] HTTP GET /api/turmas/1/disciplinas responded 200 in 194.1322 ms

@@ -15,7 +15,7 @@ namespace IrmaDulce.Infrastructure.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.24");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.25");
 
             modelBuilder.Entity("IrmaDulce.Domain.Entities.Avaliacao", b =>
                 {
@@ -146,6 +146,9 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<TimeSpan>("HoraInicio")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsEstagio")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Sala")
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
@@ -262,6 +265,9 @@ namespace IrmaDulce.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsEstagio")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -287,6 +293,9 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<int>("DisciplinaId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Ordem")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("Semestre")
                         .HasColumnType("INTEGER");
 
@@ -298,6 +307,31 @@ namespace IrmaDulce.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("DisciplinaCursos");
+                });
+
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.DisponibilidadeDocente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DiaSemana")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DocenteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<TimeSpan>("HoraFim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan>("HoraInicio")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocenteId");
+
+                    b.ToTable("DisponibilidadesDocentes");
                 });
 
             modelBuilder.Entity("IrmaDulce.Domain.Entities.LancamentoFinanceiro", b =>
@@ -387,6 +421,7 @@ namespace IrmaDulce.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal?>("DescontoPontualidade")
+                        .HasPrecision(10, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MesReferencia")
@@ -395,8 +430,8 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TipoDescontoPontualidade")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("TipoDescontoPontualidade")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("Valor")
                         .HasPrecision(10, 2)
@@ -729,6 +764,32 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.ToTable("Turmas");
                 });
 
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDiaLetivo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DiaSemana")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<TimeSpan>("HoraFim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan>("HoraInicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TurmaId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TurmaId", "DiaSemana")
+                        .IsUnique();
+
+                    b.ToTable("TurmaDiasLetivos");
+                });
+
             modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDisciplina", b =>
                 {
                     b.Property<int>("Id")
@@ -754,6 +815,29 @@ namespace IrmaDulce.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("TurmaDisciplinas");
+                });
+
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDisciplinaHorario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DiaSemana")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TurmaDisciplinaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Turno")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TurmaDisciplinaId", "DiaSemana", "Turno")
+                        .IsUnique();
+
+                    b.ToTable("TurmaDisciplinaHorarios");
                 });
 
             modelBuilder.Entity("IrmaDulce.Domain.Entities.Usuario", b =>
@@ -890,6 +974,17 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Navigation("Disciplina");
                 });
 
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.DisponibilidadeDocente", b =>
+                {
+                    b.HasOne("IrmaDulce.Domain.Entities.Pessoa", "Docente")
+                        .WithMany("Disponibilidades")
+                        .HasForeignKey("DocenteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Docente");
+                });
+
             modelBuilder.Entity("IrmaDulce.Domain.Entities.LancamentoFinanceiro", b =>
                 {
                     b.HasOne("IrmaDulce.Domain.Entities.CategoriaFinanceira", "Categoria")
@@ -1018,6 +1113,17 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Navigation("Curso");
                 });
 
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDiaLetivo", b =>
+                {
+                    b.HasOne("IrmaDulce.Domain.Entities.Turma", "Turma")
+                        .WithMany("DiasLetivos")
+                        .HasForeignKey("TurmaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Turma");
+                });
+
             modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDisciplina", b =>
                 {
                     b.HasOne("IrmaDulce.Domain.Entities.Disciplina", "Disciplina")
@@ -1042,6 +1148,17 @@ namespace IrmaDulce.Infrastructure.Migrations
                     b.Navigation("Docente");
 
                     b.Navigation("Turma");
+                });
+
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDisciplinaHorario", b =>
+                {
+                    b.HasOne("IrmaDulce.Domain.Entities.TurmaDisciplina", "TurmaDisciplina")
+                        .WithMany("Horarios")
+                        .HasForeignKey("TurmaDisciplinaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TurmaDisciplina");
                 });
 
             modelBuilder.Entity("IrmaDulce.Domain.Entities.Usuario", b =>
@@ -1091,6 +1208,8 @@ namespace IrmaDulce.Infrastructure.Migrations
 
             modelBuilder.Entity("IrmaDulce.Domain.Entities.Pessoa", b =>
                 {
+                    b.Navigation("Disponibilidades");
+
                     b.Navigation("Matriculas");
 
                     b.Navigation("Mensalidades");
@@ -1113,9 +1232,16 @@ namespace IrmaDulce.Infrastructure.Migrations
 
                     b.Navigation("DiarioClasses");
 
+                    b.Navigation("DiasLetivos");
+
                     b.Navigation("Matriculas");
 
                     b.Navigation("TurmaDisciplinas");
+                });
+
+            modelBuilder.Entity("IrmaDulce.Domain.Entities.TurmaDisciplina", b =>
+                {
+                    b.Navigation("Horarios");
                 });
 #pragma warning restore 612, 618
         }

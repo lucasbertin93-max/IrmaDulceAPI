@@ -20,6 +20,7 @@ public class CronogramaAula
     public TimeSpan HoraInicio { get; set; }
     public TimeSpan HoraFim { get; set; }
     public string? Sala { get; set; }
+    public bool IsEstagio { get; set; } = false;
 
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 }

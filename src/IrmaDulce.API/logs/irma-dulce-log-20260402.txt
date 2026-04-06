@@ -1,0 +1,14 @@
+[2026-04-02 17:43:58.807] [INF] DocumentProcessingWorker is starting.
+[2026-04-02 17:43:58.906] [INF] Now listening on: http://localhost:5079
+[2026-04-02 17:43:58.908] [INF] Application started. Press Ctrl+C to shut down.
+[2026-04-02 17:43:58.909] [INF] Hosting environment: Development
+[2026-04-02 17:43:58.909] [INF] Content root path: C:\Projects\Irma Dulce\backend\src\IrmaDulce.API
+[2026-04-02 17:46:18.061] [INF] HTTP POST /api/auth/login responded 200 in 1174.7999 ms
+[2026-04-02 17:46:18.336] [INF] HTTP GET /api/pessoas responded 200 in 151.2915 ms
+[2026-04-02 17:46:18.336] [INF] HTTP GET /api/pessoas responded 200 in 151.8717 ms
+[2026-04-02 17:46:18.376] [INF] HTTP GET /api/turmas responded 200 in 191.8267 ms
+[2026-04-02 17:46:18.413] [INF] HTTP GET /api/pessoas responded 200 in 10.0948 ms
+[2026-04-02 17:46:18.414] [INF] HTTP GET /api/pessoas responded 200 in 11.1343 ms
+[2026-04-02 17:46:18.414] [INF] HTTP GET /api/turmas responded 200 in 10.2008 ms
+[2026-04-02 17:46:18.535] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 122.4967 ms
+[2026-04-02 17:46:18.554] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 7.7131 ms

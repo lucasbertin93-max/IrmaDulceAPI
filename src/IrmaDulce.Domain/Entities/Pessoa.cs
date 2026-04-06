@@ -50,4 +50,5 @@ public class Pessoa
     public ICollection<Mensalidade> Mensalidades { get; set; } = new List<Mensalidade>();
     public ICollection<PresencaAluno> Presencas { get; set; } = new List<PresencaAluno>();
     public ICollection<NotaAluno> Notas { get; set; } = new List<NotaAluno>();
+    public ICollection<DisponibilidadeDocente> Disponibilidades { get; set; } = new List<DisponibilidadeDocente>();
 }

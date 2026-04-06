@@ -108,7 +108,24 @@ public class CursoService : ICursoService
     public async Task<IEnumerable<int>> GetDisciplinaIdsDoCursoAsync(int cursoId)
     {
         var dcs = await _dcRepo.FindAsync(dc => dc.CursoId == cursoId);
-        return dcs.Select(dc => dc.DisciplinaId);
+        return dcs.OrderBy(dc => dc.Ordem).Select(dc => dc.DisciplinaId);
+    }
+
+    public async Task SetDisciplinaOrdemAsync(int cursoId, List<int> disciplinasIds)
+    {
+        var dcs = await _dcRepo.FindAsync(dc => dc.CursoId == cursoId);
+
+        for (int i = 0; i < disciplinasIds.Count; i++)
+        {
+            var id = disciplinasIds[i];
+            var vinculacao = dcs.FirstOrDefault(d => d.DisciplinaId == id);
+            
+            if (vinculacao != null)
+            {
+                vinculacao.Ordem = i + 1;
+                await _dcRepo.UpdateAsync(vinculacao);
+            }
+        }
     }
 
     private static CursoResponse MapToResponse(Curso c) => new(

@@ -8,12 +8,14 @@ public interface IPessoaRepository : IRepository<Pessoa>
     Task<Pessoa?> GetByIdFuncionalAsync(string idFuncional);
     Task<int> GetNextSequentialIdAsync(string prefix);
     Task<Pessoa?> GetByIdWithResponsavelAsync(int id);
+    Task<Pessoa?> GetWithDisponibilidadeAsync(int id);
 }
 
 public interface IUsuarioRepository : IRepository<Usuario>
 {
     Task<Usuario?> GetByLoginAsync(string login);
     Task<Usuario?> GetByPessoaIdAsync(int pessoaId);
+    Task<IEnumerable<Usuario>> GetAllWithPessoaAsync();
 }
 
 public interface ICursoRepository : IRepository<Curso>
@@ -28,6 +30,7 @@ public interface ITurmaRepository : IRepository<Turma>
     Task<Turma?> GetWithMatriculasAsync(int id);
     Task<Turma?> GetWithDisciplinasAsync(int id);
     Task<IEnumerable<Turma>> SearchByNameAsync(string searchTerm);
+    Task<Turma?> GetWithDiasLetivosAsync(int id);
 }
 
 public interface IMatriculaRepository : IRepository<Matricula>
@@ -79,6 +82,7 @@ public interface ICronogramaAulaRepository : IRepository<CronogramaAula>
     Task<IEnumerable<CronogramaAula>> GetByTurmaAndDataAsync(int turmaId, DateTime data);
     Task<bool> ExisteConflitoDocenteAsync(int docenteId, DateTime data, TimeSpan horaInicio, TimeSpan horaFim, int? excludeId = null);
     Task<bool> ExisteConflitoTurmaAsync(int turmaId, DateTime data, TimeSpan horaInicio, TimeSpan horaFim, int? excludeId = null);
+    Task<int> GetTotalHorasLecionadasAsync(int turmaId, int disciplinaId);
 }
 
 public interface IConfiguracaoEscolarRepository : IRepository<ConfiguracaoEscolar>

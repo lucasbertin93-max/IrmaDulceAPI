@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using IrmaDulce.Application.DTOs;
 using IrmaDulce.Application.Interfaces;
+using IrmaDulce.API.BackgroundServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,148 +13,69 @@ namespace IrmaDulce.API.Controllers;
 public class DocumentosController : ControllerBase
 {
     private readonly IDocumentoService _documentoService;
+    private readonly DocumentProcessingChannel _channel;
+    private readonly DocumentJobCache _jobCache;
 
-    public DocumentosController(IDocumentoService documentoService)
+    public DocumentosController(IDocumentoService documentoService, DocumentProcessingChannel channel, DocumentJobCache jobCache)
     {
         _documentoService = documentoService;
+        _channel = channel;
+        _jobCache = jobCache;
     }
 
     [HttpPost("emitir")]
     public async Task<IActionResult> EmitirDocumento([FromBody] EmitirDocumentoRequest request)
     {
-        Console.WriteLine($"[DEBUG] Emitindo doc -> Aluno: {request.AlunoId} | Tipo: {request.TipoDocumento}");
+        Console.WriteLine($"[DEBUG] Enfileirando emissão -> Aluno: {request.AlunoId} | Tipo: {request.TipoDocumento}");
         try
         {
             var operadorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
-            var bytes = await _documentoService.EmitirDocumentoAsync(request, operadorId);
-            return File(bytes, "application/octet-stream", $"{request.TipoDocumento}_{request.AlunoId}.txt");
-        }
-        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
-        catch (InvalidOperationException ex)
-        {
-            // Bloqueio financeiro
-            if (ex.Message.StartsWith("BLOQUEIO_FINANCEIRO"))
-                return StatusCode(403, new { bloqueioFinanceiro = true, message = ex.Message.Replace("BLOQUEIO_FINANCEIRO: ", "") });
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(new { message = ex.Message });
+            
+            // Generate JobId and insert to Cache
+            var jobId = Guid.NewGuid();
+            _jobCache.AddJob(jobId);
+
+            var job = new DocumentJob
+            {
+                JobId = jobId,
+                Request = request,
+                OperadorId = operadorId
+            };
+
+            await _channel.AddJobAsync(job);
+
+            return Accepted(new { message = "Processamento iniciado", jobId });
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[DocumentosController.EmitirDocumento] UNHANDLED {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
             return BadRequest(new { message = $"[DEV] {ex.Message} -> {ex.InnerException?.Message}" });
         }
     }
-}
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(Roles = "Master,Administrativo")]
-public class CronogramaController : ControllerBase
-{
-    private readonly ICronogramaService _cronogramaService;
-
-    public CronogramaController(ICronogramaService cronogramaService)
+    [HttpGet("status/{jobId}")]
+    public IActionResult ConsultarStatus(Guid jobId)
     {
-        _cronogramaService = cronogramaService;
-    }
+        var status = _jobCache.GetStatus(jobId);
+        if (status == null) return NotFound(new { message = "Job não encontrado." });
 
-    [HttpGet]
-    [Authorize] // Todos podem ver
-    public async Task<ActionResult<IEnumerable<CronogramaResponse>>> GetByData([FromQuery] DateTime data)
-    {
-        var cronogramas = await _cronogramaService.GetByDataAsync(data);
-        return Ok(cronogramas);
-    }
-
-    [HttpGet("docente/{docenteId}")]
-    [Authorize]
-    public async Task<ActionResult<IEnumerable<CronogramaResponse>>> GetByDocente(
-        int docenteId, [FromQuery] DateTime inicio, [FromQuery] DateTime fim)
-    {
-        var cronogramas = await _cronogramaService.GetByDocenteAsync(docenteId, inicio, fim);
-        return Ok(cronogramas);
-    }
-
-    [HttpPost]
-    public async Task<ActionResult<object>> Criar([FromBody] CronogramaRequest request)
-    {
-        // Verifica conflitos antes de criar (regra 9.2 — alerta, não bloqueia)
-        var conflitos = await _cronogramaService.VerificarConflitosAsync(request);
-        var cronograma = await _cronogramaService.CriarAsync(request);
-
-        return Created("", new
+        return Ok(new
         {
-            cronograma,
-            conflitos,
-            temConflitos = conflitos.Any()
+            jobId = status.JobId,
+            status = status.Status,
+            error = status.ErrorMessage,
+            isCompleted = status.FileBytes != null
         });
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult<object>> Atualizar(int id, [FromBody] CronogramaRequest request)
+    [HttpGet("download/{jobId}")]
+    public IActionResult Download(Guid jobId)
     {
-        try
-        {
-            var conflitos = await _cronogramaService.VerificarConflitosAsync(request, id);
-            var cronograma = await _cronogramaService.AtualizarAsync(id, request);
+        var status = _jobCache.GetStatus(jobId);
+        if (status == null || status.FileBytes == null) return NotFound(new { message = "Arquivo não encontrado ou ainda em processamento." });
 
-            return Ok(new
-            {
-                cronograma,
-                conflitos,
-                temConflitos = conflitos.Any()
-            });
-        }
-        catch (KeyNotFoundException) { return NotFound(); }
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Deletar(int id)
-    {
-        try
-        {
-            await _cronogramaService.DeletarAsync(id);
-            return NoContent();
-        }
-        catch (KeyNotFoundException) { return NotFound(); }
-    }
-
-    [HttpPost("verificar-conflitos")]
-    public async Task<ActionResult<IEnumerable<ConflitoCronogramaResponse>>> VerificarConflitos(
-        [FromBody] CronogramaRequest request)
-    {
-        var conflitos = await _cronogramaService.VerificarConflitosAsync(request);
-        return Ok(conflitos);
+        _jobCache.RemoveJob(jobId); // Clean up after successful download
+        return File(status.FileBytes, "application/octet-stream", $"Documento_{jobId}.docx");
     }
 }
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize(Roles = "Master,Administrativo")]
-public class ConfiguracoesController : ControllerBase
-{
-    private readonly IConfiguracaoService _configuracaoService;
 
-    public ConfiguracoesController(IConfiguracaoService configuracaoService)
-    {
-        _configuracaoService = configuracaoService;
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<ConfiguracaoResponse>> Get()
-    {
-        var config = await _configuracaoService.GetAsync();
-        return Ok(config);
-    }
-
-    [HttpPut]
-    [Authorize(Roles = "Master")]
-    public async Task<ActionResult<ConfiguracaoResponse>> Atualizar([FromBody] ConfiguracaoRequest request)
-    {
-        var config = await _configuracaoService.AtualizarAsync(request);
-        return Ok(config);
-    }
-}

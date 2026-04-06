@@ -9,6 +9,14 @@ public interface IAuthService
     Task<bool> RecuperarSenhaAsync(string login);
 }
 
+public interface IUsuarioService
+{
+    Task<IEnumerable<UsuarioResponse>> GetAllAsync();
+    Task AlterarPerfilAsync(int usuarioId, int solicitanteId, PerfilUsuario novoPerfil);
+    Task AlternarStatusAcessoAsync(int usuarioId, int solicitanteId);
+    Task ResetarSenhaAsync(int usuarioId, int solicitanteId, string novaSenha);
+}
+
 public interface IPessoaService
 {
     Task<PessoaResponse> CriarAsync(PessoaCreateRequest request);
@@ -17,6 +25,8 @@ public interface IPessoaService
     Task<IEnumerable<PessoaResponse>> GetAllAsync(PerfilUsuario? perfil = null);
     Task<PessoaResponse> AtualizarAsync(int id, PessoaCreateRequest request);
     Task DesativarAsync(int id);
+    Task<IEnumerable<DisponibilidadeDocenteResponse>> GetDisponibilidadesAsync(int id);
+    Task DefinirDisponibilidadesAsync(int id, List<DisponibilidadeDocenteRequest> request);
 }
 
 public interface ICursoService
@@ -29,6 +39,7 @@ public interface ICursoService
     Task VincularDisciplinaAsync(int cursoId, int disciplinaId, int? semestre);
     Task DesvincularDisciplinaAsync(int cursoId, int disciplinaId);
     Task<IEnumerable<int>> GetDisciplinaIdsDoCursoAsync(int cursoId);
+    Task SetDisciplinaOrdemAsync(int cursoId, List<int> disciplinasIds);
 }
 
 public interface IDisciplinaService
@@ -52,6 +63,9 @@ public interface ITurmaService
     Task CancelarMatriculaAsync(int turmaId, int alunoId);
     Task<object> GetDisciplinasDaTurmaAsync(int turmaId);
     Task AtribuirDocenteAsync(int turmaId, int disciplinaId, int? docenteId);
+    Task<IEnumerable<TurmaDiaLetivoResponse>> GetDiasLetivosAsync(int turmaId);
+    Task DefinirDiasLetivosAsync(int turmaId, List<TurmaDiaLetivoRequest> request);
+    Task DefinirHorariosDisciplinaAsync(int turmaId, int disciplinaId, List<TurmaDisciplinaHorarioRequest> horarios);
 }
 
 public interface IDiarioClasseService
@@ -104,6 +118,7 @@ public interface ICronogramaService
     Task<CronogramaResponse> AtualizarAsync(int id, CronogramaRequest request);
     Task DeletarAsync(int id);
     Task<IEnumerable<ConflitoCronogramaResponse>> VerificarConflitosAsync(CronogramaRequest request, int? excludeId = null);
+    Task<CronogramaGerarLoteResponse> GerarLoteAsync(int turmaId, DateTime dataInicio, DateTime dataFim);
 }
 
 public interface IConfiguracaoService

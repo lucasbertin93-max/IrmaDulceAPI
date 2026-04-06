@@ -198,6 +198,45 @@ public class PessoaService : IPessoaService
         }
     }
 
+    public async Task<IEnumerable<DisponibilidadeDocenteResponse>> GetDisponibilidadesAsync(int id)
+    {
+        var pessoa = await _pessoaRepo.GetWithDisponibilidadeAsync(id)
+            ?? throw new KeyNotFoundException($"Pessoa com ID {id} não encontrada.");
+
+        return pessoa.Disponibilidades.Select(d => new DisponibilidadeDocenteResponse(
+            Id: d.Id,
+            DiaSemana: d.DiaSemana,
+            HoraInicio: d.HoraInicio,
+            HoraFim: d.HoraFim
+        ));
+    }
+
+    public async Task DefinirDisponibilidadesAsync(int id, List<DisponibilidadeDocenteRequest> request)
+    {
+        var pessoa = await _pessoaRepo.GetWithDisponibilidadeAsync(id)
+            ?? throw new KeyNotFoundException($"Pessoa com ID {id} não encontrada.");
+
+        if (pessoa.Perfil != PerfilUsuario.Docente)
+            throw new InvalidOperationException("Apenas docentes possuem grade de disponibilidade.");
+
+        // Clear existing availability
+        pessoa.Disponibilidades.Clear();
+
+        // Add new availability
+        foreach (var req in request)
+        {
+            pessoa.Disponibilidades.Add(new DisponibilidadeDocente
+            {
+                DocenteId = id,
+                DiaSemana = req.DiaSemana,
+                HoraInicio = req.HoraInicio,
+                HoraFim = req.HoraFim
+            });
+        }
+
+        await _pessoaRepo.UpdateAsync(pessoa);
+    }
+
     private static PessoaResponse MapToResponse(Pessoa p) => new(
         Id: p.Id,
         IdFuncional: p.IdFuncional,

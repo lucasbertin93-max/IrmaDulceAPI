@@ -8,6 +8,7 @@ public class Disciplina
     public int CargaHoraria { get; set; } // Em horas
     public string? Descricao { get; set; }
     public bool Ativo { get; set; } = true;
+    public bool IsEstagio { get; set; } = false;
     public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
 
     // Navegação

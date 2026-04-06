@@ -14,6 +14,7 @@ public class TurmaService : ITurmaService
     private readonly IPessoaRepository _pessoaRepo;
     private readonly IRepository<TurmaDisciplina> _tdRepo;
     private readonly IDisciplinaRepository _disciplinaRepo;
+    private readonly IRepository<TurmaDisciplinaHorario> _horarioRepo;
 
     public TurmaService(
         ITurmaRepository turmaRepo,
@@ -21,7 +22,8 @@ public class TurmaService : ITurmaService
         IMatriculaRepository matriculaRepo,
         IPessoaRepository pessoaRepo,
         IRepository<TurmaDisciplina> tdRepo,
-        IDisciplinaRepository disciplinaRepo)
+        IDisciplinaRepository disciplinaRepo,
+        IRepository<TurmaDisciplinaHorario> horarioRepo)
     {
         _turmaRepo = turmaRepo;
         _cursoRepo = cursoRepo;
@@ -29,6 +31,7 @@ public class TurmaService : ITurmaService
         _pessoaRepo = pessoaRepo;
         _tdRepo = tdRepo;
         _disciplinaRepo = disciplinaRepo;
+        _horarioRepo = horarioRepo;
     }
 
 
@@ -190,6 +193,7 @@ public class TurmaService : ITurmaService
         {
             var disciplina = await _disciplinaRepo.GetByIdAsync(td.DisciplinaId);
             Pessoa? docente = td.DocenteId.HasValue ? await _pessoaRepo.GetByIdAsync(td.DocenteId.Value) : null;
+            var horarios = await _horarioRepo.FindAsync(h => h.TurmaDisciplinaId == td.Id);
 
             list.Add(new
             {
@@ -199,6 +203,11 @@ public class TurmaService : ITurmaService
                 DisciplinaNome = disciplina?.Nome ?? "",
                 td.DocenteId,
                 DocenteNome = docente?.NomeCompleto ?? null as string,
+                Horarios = horarios.Select(h => new TurmaDisciplinaHorarioResponse(
+                    Id: h.Id,
+                    DiaSemana: h.DiaSemana,
+                    Turno: h.Turno
+                )).ToList()
             });
         }
 
@@ -213,6 +222,65 @@ public class TurmaService : ITurmaService
 
         td.DocenteId = docenteId;
         await _tdRepo.UpdateAsync(td);
+    }
+
+    public async Task<IEnumerable<TurmaDiaLetivoResponse>> GetDiasLetivosAsync(int turmaId)
+    {
+        var turma = await _turmaRepo.GetWithDiasLetivosAsync(turmaId)
+            ?? throw new KeyNotFoundException($"Turma com ID {turmaId} não encontrada.");
+
+        return turma.DiasLetivos.Select(d => new TurmaDiaLetivoResponse(
+            Id: d.Id,
+            DiaSemana: d.DiaSemana,
+            HoraInicio: d.HoraInicio,
+            HoraFim: d.HoraFim
+        ));
+    }
+
+    public async Task DefinirDiasLetivosAsync(int turmaId, List<TurmaDiaLetivoRequest> request)
+    {
+        var turma = await _turmaRepo.GetWithDiasLetivosAsync(turmaId)
+            ?? throw new KeyNotFoundException($"Turma com ID {turmaId} não encontrada.");
+
+        turma.DiasLetivos.Clear();
+
+        foreach (var req in request)
+        {
+            turma.DiasLetivos.Add(new TurmaDiaLetivo
+            {
+                TurmaId = turmaId,
+                DiaSemana = req.DiaSemana,
+                HoraInicio = req.HoraInicio,
+                HoraFim = req.HoraFim
+            });
+        }
+
+        await _turmaRepo.UpdateAsync(turma);
+    }
+
+    public async Task DefinirHorariosDisciplinaAsync(int turmaId, int disciplinaId, List<TurmaDisciplinaHorarioRequest> horarios)
+    {
+        var tds = await _tdRepo.FindAsync(td => td.TurmaId == turmaId && td.DisciplinaId == disciplinaId);
+        var td = tds.FirstOrDefault()
+            ?? throw new KeyNotFoundException("Disciplina não encontrada nesta turma.");
+
+        // Obter os horarios dessa relacao e limpar (Delete)
+        var existingHorarios = await _horarioRepo.FindAsync(h => h.TurmaDisciplinaId == td.Id);
+        foreach (var h in existingHorarios)
+        {
+            await _horarioRepo.DeleteAsync(h);
+        }
+
+        // Criar os novos
+        foreach (var req in horarios)
+        {
+            await _horarioRepo.AddAsync(new TurmaDisciplinaHorario
+            {
+                TurmaDisciplinaId = td.Id,
+                DiaSemana = req.DiaSemana,
+                Turno = req.Turno
+            });
+        }
     }
 
     private static TurmaResponse MapToResponse(Turma t, string cursoNome) => new(

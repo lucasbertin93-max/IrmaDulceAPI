@@ -1,0 +1,76 @@
+[2026-04-01 17:36:40.090] [INF] DocumentProcessingWorker is starting.
+[2026-04-01 17:36:40.352] [INF] Now listening on: http://localhost:5079
+[2026-04-01 17:36:40.367] [INF] Application started. Press Ctrl+C to shut down.
+[2026-04-01 17:36:40.403] [INF] Hosting environment: Development
+[2026-04-01 17:36:40.410] [INF] Content root path: C:\Projects\Irma Dulce\backend\src\IrmaDulce.API
+[2026-04-01 18:21:56.902] [INF] HTTP POST /api/auth/login responded 200 in 2167.1350 ms
+[2026-04-01 18:21:57.448] [INF] HTTP GET /api/pessoas responded 200 in 311.8658 ms
+[2026-04-01 18:21:57.448] [INF] HTTP GET /api/pessoas responded 200 in 312.2755 ms
+[2026-04-01 18:21:57.483] [INF] HTTP GET /api/turmas responded 200 in 347.0152 ms
+[2026-04-01 18:21:57.655] [INF] HTTP GET /api/pessoas responded 200 in 42.9140 ms
+[2026-04-01 18:21:57.656] [INF] HTTP GET /api/pessoas responded 200 in 35.8397 ms
+[2026-04-01 18:21:57.658] [INF] HTTP GET /api/turmas responded 200 in 45.9107 ms
+[2026-04-01 18:21:58.045] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 283.2967 ms
+[2026-04-01 18:21:58.099] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 20.4125 ms
+[2026-04-01 18:38:54.133] [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[2026-04-01 18:38:54.234] [INF] HTTP GET /api/configuracoes responded 200 in 147.0273 ms
+[2026-04-01 18:38:54.311] [INF] HTTP GET /api/configuracoes responded 200 in 9.3905 ms
+[2026-04-01 18:38:57.635] [INF] HTTP GET /api/pessoas responded 200 in 5.6063 ms
+[2026-04-01 18:38:57.638] [INF] HTTP GET /api/pessoas responded 200 in 6.4085 ms
+[2026-04-01 18:38:57.646] [INF] HTTP GET /api/turmas responded 200 in 14.6400 ms
+[2026-04-01 18:38:57.658] [INF] HTTP GET /api/pessoas responded 200 in 6.8096 ms
+[2026-04-01 18:38:57.663] [INF] HTTP GET /api/pessoas responded 200 in 3.8271 ms
+[2026-04-01 18:38:57.671] [INF] HTTP GET /api/turmas responded 200 in 5.8446 ms
+[2026-04-01 18:38:57.724] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 29.7460 ms
+[2026-04-01 18:38:57.753] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 13.2503 ms
+[2026-04-01 18:39:36.530] [INF] HTTP GET /api/pessoas responded 200 in 3.0533 ms
+[2026-04-01 18:39:36.538] [INF] HTTP GET /api/configuracoes responded 200 in 9.8774 ms
+[2026-04-01 18:39:36.545] [INF] HTTP GET /api/pessoas responded 200 in 4.2070 ms
+[2026-04-01 18:39:36.563] [INF] HTTP GET /api/configuracoes responded 200 in 2.5167 ms
+[2026-04-01 18:39:46.037] [INF] HTTP GET /api/configuracoes responded 200 in 2.0650 ms
+[2026-04-01 18:39:46.048] [INF] HTTP GET /api/configuracoes responded 200 in 2.1870 ms
+[2026-04-01 18:39:48.534] [INF] HTTP GET /api/pessoas responded 200 in 3.0102 ms
+[2026-04-01 18:39:48.535] [INF] HTTP GET /api/turmas responded 200 in 2.8378 ms
+[2026-04-01 18:39:48.535] [INF] HTTP GET /api/pessoas responded 200 in 2.7236 ms
+[2026-04-01 18:39:48.558] [INF] HTTP GET /api/pessoas responded 200 in 4.6438 ms
+[2026-04-01 18:39:48.558] [INF] HTTP GET /api/pessoas responded 200 in 3.0123 ms
+[2026-04-01 18:39:48.561] [INF] HTTP GET /api/turmas responded 200 in 6.4517 ms
+[2026-04-01 18:39:48.571] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 3.7652 ms
+[2026-04-01 18:39:48.633] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 16.8305 ms
+[2026-04-01 18:41:10.685] [INF] HTTP GET /api/configuracoes responded 200 in 2.0944 ms
+[2026-04-01 18:41:10.685] [INF] HTTP GET /api/pessoas responded 200 in 2.0198 ms
+[2026-04-01 18:41:10.701] [INF] HTTP GET /api/configuracoes responded 200 in 2.6766 ms
+[2026-04-01 18:41:10.703] [INF] HTTP GET /api/pessoas responded 200 in 1.7090 ms
+[2026-04-01 18:48:30.873] [INF] HTTP POST /api/auth/login responded 401 in 19.2721 ms
+[2026-04-01 18:48:36.669] [INF] HTTP POST /api/auth/login responded 401 in 3.6977 ms
+[2026-04-01 18:48:50.604] [INF] HTTP POST /api/auth/login responded 200 in 484.5944 ms
+[2026-04-01 18:48:50.668] [INF] HTTP GET /api/pessoas responded 200 in 3.7912 ms
+[2026-04-01 18:48:50.677] [INF] HTTP GET /api/pessoas responded 200 in 3.3182 ms
+[2026-04-01 18:48:50.682] [INF] HTTP GET /api/turmas responded 200 in 2.3471 ms
+[2026-04-01 18:48:50.684] [INF] HTTP GET /api/pessoas responded 200 in 1.7707 ms
+[2026-04-01 18:48:50.703] [INF] HTTP GET /api/pessoas responded 200 in 2.8730 ms
+[2026-04-01 18:48:50.711] [INF] HTTP GET /api/turmas responded 200 in 2.9026 ms
+[2026-04-01 18:48:50.723] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 5.6256 ms
+[2026-04-01 18:48:50.735] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 2.7191 ms
+[2026-04-01 18:48:52.677] [INF] HTTP GET /api/pessoas responded 200 in 2.4172 ms
+[2026-04-01 18:48:52.681] [INF] HTTP GET /api/configuracoes responded 200 in 5.7280 ms
+[2026-04-01 18:48:52.693] [INF] HTTP GET /api/pessoas responded 200 in 4.0396 ms
+[2026-04-01 18:48:52.707] [INF] HTTP GET /api/configuracoes responded 200 in 1.2590 ms
+[2026-04-01 19:00:35.897] [INF] HTTP GET /api/configuracoes responded 200 in 57.9575 ms
+[2026-04-01 19:00:35.905] [INF] HTTP GET /api/pessoas responded 200 in 65.9331 ms
+[2026-04-01 19:00:35.912] [INF] HTTP GET /api/configuracoes responded 200 in 2.2360 ms
+[2026-04-01 19:00:35.923] [INF] HTTP GET /api/pessoas responded 200 in 3.8472 ms
+[2026-04-01 19:11:02.080] [INF] HTTP GET /api/pessoas responded 200 in 20.3465 ms
+[2026-04-01 19:11:02.082] [INF] HTTP GET /api/configuracoes responded 200 in 23.0497 ms
+[2026-04-01 19:11:02.114] [INF] HTTP GET /api/configuracoes responded 200 in 15.6360 ms
+[2026-04-01 19:11:02.119] [INF] HTTP GET /api/pessoas responded 200 in 23.3112 ms
+[2026-04-01 19:11:19.773] [INF] HTTP POST /api/auth/login responded 401 in 36.5922 ms
+[2026-04-01 19:11:30.985] [INF] HTTP POST /api/auth/login responded 401 in 3.3263 ms
+[2026-04-01 19:12:08.089] [INF] HTTP POST /api/auth/login responded 401 in 7.3571 ms
+[2026-04-01 19:14:55.959] [INF] Application is shutting down...
+[2026-04-01 19:16:13.370] [INF] DocumentProcessingWorker is starting.
+[2026-04-01 19:16:13.503] [INF] Now listening on: http://localhost:5079
+[2026-04-01 19:16:13.507] [INF] Application started. Press Ctrl+C to shut down.
+[2026-04-01 19:16:13.509] [INF] Hosting environment: Development
+[2026-04-01 19:16:13.510] [INF] Content root path: C:\Projects\Irma Dulce\backend\src\IrmaDulce.API
+[2026-04-01 19:16:32.226] [INF] HTTP POST /api/auth/login responded 200 in 1332.6507 ms

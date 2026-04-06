@@ -36,6 +36,9 @@ public class PessoaRepository : Repository<Pessoa>, IPessoaRepository
 
     public async Task<Pessoa?> GetByIdWithResponsavelAsync(int id)
         => await _dbSet.Include(p => p.ResponsavelFinanceiro).FirstOrDefaultAsync(p => p.Id == id);
+        
+    public async Task<Pessoa?> GetWithDisponibilidadeAsync(int id)
+        => await _dbSet.Include(p => p.Disponibilidades).FirstOrDefaultAsync(p => p.Id == id);
 }
 
 public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
@@ -43,10 +46,16 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
     public UsuarioRepository(AppDbContext context) : base(context) { }
 
     public async Task<Usuario?> GetByLoginAsync(string login)
-        => await _dbSet.Include(u => u.Pessoa).FirstOrDefaultAsync(u => u.Login == login);
+    {
+        var loginLower = login.ToLower();
+        return await _dbSet.Include(u => u.Pessoa).FirstOrDefaultAsync(u => u.Login.ToLower() == loginLower);
+    }
 
     public async Task<Usuario?> GetByPessoaIdAsync(int pessoaId)
         => await _dbSet.FirstOrDefaultAsync(u => u.PessoaId == pessoaId);
+
+    public async Task<IEnumerable<Usuario>> GetAllWithPessoaAsync()
+        => await _dbSet.Include(u => u.Pessoa).OrderBy(u => u.Pessoa.NomeCompleto).ToListAsync();
 }
 
 public class CursoRepository : Repository<Curso>, ICursoRepository
@@ -78,6 +87,9 @@ public class TurmaRepository : Repository<Turma>, ITurmaRepository
     public async Task<IEnumerable<Turma>> SearchByNameAsync(string searchTerm)
         => await _dbSet.Where(t => t.Nome.Contains(searchTerm) || t.IdFuncional.Contains(searchTerm))
                        .ToListAsync();
+                       
+    public async Task<Turma?> GetWithDiasLetivosAsync(int id)
+        => await _dbSet.Include(t => t.DiasLetivos).FirstOrDefaultAsync(t => t.Id == id);
 }
 
 public class MatriculaRepository : Repository<Matricula>, IMatriculaRepository
@@ -200,6 +212,15 @@ public class CronogramaAulaRepository : Repository<CronogramaAula>, ICronogramaA
             c.HoraInicio < horaFim &&
             c.HoraFim > horaInicio &&
             (excludeId == null || c.Id != excludeId));
+            
+    public async Task<int> GetTotalHorasLecionadasAsync(int turmaId, int disciplinaId)
+    {
+        var aulas = await _dbSet
+            .Where(c => c.TurmaId == turmaId && c.DisciplinaId == disciplinaId)
+            .ToListAsync();
+
+        return (int)aulas.Sum(a => (a.HoraFim - a.HoraInicio).TotalHours);
+    }
 }
 
 public class ConfiguracaoEscolarRepository : Repository<ConfiguracaoEscolar>, IConfiguracaoEscolarRepository

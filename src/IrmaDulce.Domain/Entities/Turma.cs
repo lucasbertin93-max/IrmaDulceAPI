@@ -20,4 +20,5 @@ public class Turma
     public ICollection<TurmaDisciplina> TurmaDisciplinas { get; set; } = new List<TurmaDisciplina>();
     public ICollection<DiarioClasse> DiarioClasses { get; set; } = new List<DiarioClasse>();
     public ICollection<CronogramaAula> Cronogramas { get; set; } = new List<CronogramaAula>();
+    public ICollection<TurmaDiaLetivo> DiasLetivos { get; set; } = new List<TurmaDiaLetivo>();
 }

@@ -1,0 +1,158 @@
+[2026-03-12 13:38:19.199] [INF] Now listening on: http://localhost:5079
+[2026-03-12 13:38:19.245] [INF] Application started. Press Ctrl+C to shut down.
+[2026-03-12 13:38:19.247] [INF] Hosting environment: Development
+[2026-03-12 13:38:19.248] [INF] Content root path: C:\Projects\Irma Dulce\backend\src\IrmaDulce.API
+[2026-03-12 14:12:43.287] [INF] DocumentProcessingWorker is starting.
+[2026-03-12 14:12:43.390] [INF] Now listening on: http://localhost:5079
+[2026-03-12 14:12:43.392] [INF] Application started. Press Ctrl+C to shut down.
+[2026-03-12 14:12:43.394] [INF] Hosting environment: Development
+[2026-03-12 14:12:43.397] [INF] Content root path: C:\Projects\Irma Dulce\backend\src\IrmaDulce.API
+[2026-03-12 14:14:30.390] [INF] HTTP POST /api/auth/login responded 401 in 2735.1335 ms
+[2026-03-12 14:15:16.338] [INF] HTTP POST /api/auth/login responded 200 in 2054.3282 ms
+[2026-03-12 14:15:18.164] [INF] HTTP GET /api/pessoas responded 200 in 393.7192 ms
+[2026-03-12 14:15:18.165] [INF] HTTP GET /api/pessoas responded 200 in 381.8035 ms
+[2026-03-12 14:15:18.198] [INF] HTTP GET /api/turmas responded 200 in 426.9432 ms
+[2026-03-12 14:15:18.286] [INF] HTTP GET /api/turmas responded 200 in 11.7800 ms
+[2026-03-12 14:15:18.289] [INF] HTTP GET /api/pessoas responded 200 in 14.6672 ms
+[2026-03-12 14:15:18.289] [INF] HTTP GET /api/pessoas responded 200 in 14.6492 ms
+[2026-03-12 14:15:23.088] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 454.3449 ms
+[2026-03-12 14:15:23.123] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 6.2653 ms
+[2026-03-12 14:16:11.940] [INF] HTTP GET /api/pessoas/funcional/Joao responded 404 in 99.4573 ms
+[2026-03-12 14:16:12.070] [INF] HTTP GET /api/pessoas responded 200 in 2.8892 ms
+[2026-03-12 14:16:33.264] [INF] HTTP GET /api/pessoas/funcional/1 responded 404 in 3.5616 ms
+[2026-03-12 14:16:33.360] [INF] HTTP GET /api/pessoas responded 200 in 4.3160 ms
+[2026-03-12 14:16:39.952] [INF] HTTP GET /api/pessoas responded 200 in 9.5684 ms
+[2026-03-12 14:16:40.108] [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+[2026-03-12 14:16:40.159] [INF] HTTP GET /api/pessoas responded 200 in 13.1091 ms
+[2026-03-12 14:16:40.228] [INF] HTTP GET /api/configuracoes responded 200 in 193.8237 ms
+[2026-03-12 14:16:40.357] [INF] HTTP GET /api/configuracoes responded 200 in 4.3176 ms
+[2026-03-12 14:17:22.125] [INF] HTTP GET /api/pessoas/funcional/Lucas Bertin responded 404 in 2.9095 ms
+[2026-03-12 14:17:22.220] [INF] HTTP GET /api/pessoas responded 200 in 3.7942 ms
+[2026-03-12 14:17:59.900] [INF] HTTP POST /api/documentos/emitir responded 202 in 62.2238 ms
+[2026-03-12 14:17:59.913] [INF] Iniciando processamento do Job "04dda190-a035-4fb9-baad-4c70deabf811"
+[2026-03-12 14:18:00.094] [ERR] Erro ao processar Job "04dda190-a035-4fb9-baad-4c70deabf811".
+System.InvalidOperationException: BLOQUEIO_FINANCEIRO: Aluno possui mensalidades em atraso. Informe a senha do Master para prosseguir.
+   at IrmaDulce.Application.Services.DocumentoService.EmitirDocumentoAsync(EmitirDocumentoRequest request, Int32 operadorId) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\Services\DocumentoService.cs:line 70
+   at IrmaDulce.API.BackgroundServices.DocumentProcessingWorker.ExecuteAsync(CancellationToken stoppingToken) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.API\BackgroundServices\DocumentProcessingWorker.cs:line 42
+[2026-03-12 14:18:02.991] [INF] HTTP GET /api/documentos/status/04dda190-a035-4fb9-baad-4c70deabf811 responded 200 in 46.8017 ms
+[2026-03-12 14:19:02.799] [INF] HTTP GET /api/pessoas/funcional/Henrique responded 404 in 9.1357 ms
+[2026-03-12 14:19:03.281] [INF] HTTP GET /api/pessoas responded 200 in 6.1997 ms
+[2026-03-12 14:19:35.508] [INF] HTTP POST /api/documentos/emitir responded 202 in 1.9046 ms
+[2026-03-12 14:19:35.508] [INF] Iniciando processamento do Job "96c544bd-3ce1-44da-ad3d-5e55806e1934"
+[2026-03-12 14:19:35.515] [ERR] Erro ao processar Job "96c544bd-3ce1-44da-ad3d-5e55806e1934".
+System.InvalidOperationException: BLOQUEIO_FINANCEIRO: Aluno possui mensalidades em atraso. Informe a senha do Master para prosseguir.
+   at IrmaDulce.Application.Services.DocumentoService.EmitirDocumentoAsync(EmitirDocumentoRequest request, Int32 operadorId) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\Services\DocumentoService.cs:line 70
+   at IrmaDulce.API.BackgroundServices.DocumentProcessingWorker.ExecuteAsync(CancellationToken stoppingToken) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.API\BackgroundServices\DocumentProcessingWorker.cs:line 42
+[2026-03-12 14:19:38.558] [INF] HTTP GET /api/documentos/status/96c544bd-3ce1-44da-ad3d-5e55806e1934 responded 200 in 6.0506 ms
+[2026-03-12 14:19:47.565] [INF] HTTP GET /api/pessoas responded 200 in 2.2009 ms
+[2026-03-12 14:19:47.601] [INF] HTTP GET /api/configuracoes responded 200 in 15.6392 ms
+[2026-03-12 14:19:47.626] [INF] HTTP GET /api/pessoas responded 200 in 16.7814 ms
+[2026-03-12 14:19:47.659] [INF] HTTP GET /api/configuracoes responded 200 in 2.2869 ms
+[2026-03-12 14:19:58.494] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 8.6994 ms
+[2026-03-12 14:19:58.513] [INF] HTTP GET /api/configuracoes responded 200 in 2.4508 ms
+[2026-03-12 14:19:58.587] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 4.8836 ms
+[2026-03-12 14:19:58.863] [INF] HTTP GET /api/configuracoes responded 200 in 14.1046 ms
+[2026-03-12 14:19:58.899] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 413.3347 ms
+[2026-03-12 14:19:59.063] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 134.5432 ms
+[2026-03-12 14:20:17.778] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 74.3485 ms
+[2026-03-12 14:20:17.831] [INF] HTTP GET /api/configuracoes responded 200 in 2.9228 ms
+[2026-03-12 14:21:58.554] [INF] HTTP POST /api/financeiro/mensalidades/pagamento responded 200 in 380.6610 ms
+[2026-03-12 14:21:59.777] [INF] HTTP GET /api/configuracoes responded 200 in 1.9317 ms
+[2026-03-12 14:21:59.810] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 43.0086 ms
+[2026-03-12 14:23:53.389] [INF] HTTP POST /api/financeiro/mensalidades/pagamento responded 200 in 32.5554 ms
+[2026-03-12 14:23:53.723] [INF] HTTP GET /api/configuracoes responded 200 in 12.8307 ms
+[2026-03-12 14:23:53.746] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 58.0558 ms
+[2026-03-12 14:24:37.458] [INF] HTTP POST /api/financeiro/mensalidades/pagamento responded 200 in 29.7866 ms
+[2026-03-12 14:24:37.743] [INF] HTTP GET /api/configuracoes responded 200 in 1.1961 ms
+[2026-03-12 14:24:37.800] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 113.5533 ms
+[2026-03-12 14:24:56.191] [INF] HTTP POST /api/financeiro/mensalidades/pagamento responded 200 in 24.9822 ms
+[2026-03-12 14:24:56.973] [INF] HTTP GET /api/configuracoes responded 200 in 2.9712 ms
+[2026-03-12 14:24:57.075] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 97.1926 ms
+[2026-03-12 14:25:29.985] [INF] HTTP GET /api/pessoas/funcional/Lucas Bertin responded 404 in 4.2469 ms
+[2026-03-12 14:25:29.996] [INF] HTTP GET /api/pessoas responded 200 in 1.4349 ms
+[2026-03-12 14:26:07.305] [INF] HTTP POST /api/documentos/emitir responded 202 in 12.8387 ms
+[2026-03-12 14:26:07.309] [INF] Iniciando processamento do Job "cda5c43e-ad62-47e3-b44c-c3a67789d974"
+[2026-03-12 14:26:07.985] [ERR] Erro ao processar Job "cda5c43e-ad62-47e3-b44c-c3a67789d974".
+System.InvalidOperationException: The parent is missing.
+   at System.Xml.Linq.XNode.AddAfterSelf(Object content)
+   at Xceed.Document.NET.InsertBeforeOrAfter.InsertTableAfterSelf(Int32 rowCount, Int32 columnCount)
+   at Xceed.Document.NET.Paragraph.InsertTableAfterSelf(Int32 rowCount, Int32 columnCount)
+   at IrmaDulce.Application.Services.DocumentoService.EmitirDocumentoAsync(EmitirDocumentoRequest request, Int32 operadorId) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\Services\DocumentoService.cs:line 214
+   at IrmaDulce.API.BackgroundServices.DocumentProcessingWorker.ExecuteAsync(CancellationToken stoppingToken) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.API\BackgroundServices\DocumentProcessingWorker.cs:line 42
+[2026-03-12 14:26:10.389] [INF] HTTP GET /api/documentos/status/cda5c43e-ad62-47e3-b44c-c3a67789d974 responded 200 in 5.4807 ms
+[2026-03-12 14:26:46.612] [INF] HTTP GET /api/pessoas/funcional/Henrique Belgamo responded 404 in 2.4099 ms
+[2026-03-12 14:26:46.672] [INF] HTTP GET /api/pessoas responded 200 in 3.4400 ms
+[2026-03-12 14:27:14.415] [INF] HTTP GET /api/pessoas/funcional/Henrique responded 404 in 1.9210 ms
+[2026-03-12 14:27:14.463] [INF] HTTP GET /api/pessoas responded 200 in 1.8756 ms
+[2026-03-12 14:27:30.382] [INF] HTTP GET /api/pessoas/funcional/Lucas Bertin responded 404 in 1.7846 ms
+[2026-03-12 14:27:30.437] [INF] HTTP GET /api/pessoas responded 200 in 1.6044 ms
+[2026-03-12 14:27:44.770] [INF] HTTP POST /api/documentos/emitir responded 202 in 2.0205 ms
+[2026-03-12 14:27:44.771] [INF] Iniciando processamento do Job "32e97513-d3e6-41e7-bfbd-7aa92be3401c"
+[2026-03-12 14:27:44.933] [ERR] Erro ao processar Job "32e97513-d3e6-41e7-bfbd-7aa92be3401c".
+System.InvalidOperationException: The parent is missing.
+   at System.Xml.Linq.XNode.AddAfterSelf(Object content)
+   at Xceed.Document.NET.InsertBeforeOrAfter.InsertTableAfterSelf(Int32 rowCount, Int32 columnCount)
+   at Xceed.Document.NET.Paragraph.InsertTableAfterSelf(Int32 rowCount, Int32 columnCount)
+   at IrmaDulce.Application.Services.DocumentoService.EmitirDocumentoAsync(EmitirDocumentoRequest request, Int32 operadorId) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\Services\DocumentoService.cs:line 214
+   at IrmaDulce.API.BackgroundServices.DocumentProcessingWorker.ExecuteAsync(CancellationToken stoppingToken) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.API\BackgroundServices\DocumentProcessingWorker.cs:line 42
+[2026-03-12 14:27:47.830] [INF] HTTP GET /api/documentos/status/32e97513-d3e6-41e7-bfbd-7aa92be3401c responded 200 in 0.9232 ms
+[2026-03-12 14:28:27.917] [INF] HTTP GET /api/pessoas responded 200 in 2.6324 ms
+[2026-03-12 14:28:27.919] [INF] HTTP GET /api/configuracoes responded 200 in 4.6525 ms
+[2026-03-12 14:28:27.932] [INF] HTTP GET /api/configuracoes responded 200 in 1.0585 ms
+[2026-03-12 14:28:27.932] [INF] HTTP GET /api/pessoas responded 200 in 1.2007 ms
+[2026-03-12 14:29:46.249] [INF] HTTP GET /api/pessoas/funcional/A000002 responded 200 in 5.5377 ms
+[2026-03-12 14:30:20.382] [INF] HTTP POST /api/documentos/emitir responded 202 in 5.3243 ms
+[2026-03-12 14:30:20.389] [INF] Iniciando processamento do Job "f28083ad-4325-46f1-a390-60dfb70f53d9"
+[2026-03-12 14:30:20.585] [ERR] Erro ao processar Job "f28083ad-4325-46f1-a390-60dfb70f53d9".
+System.InvalidOperationException: The parent is missing.
+   at System.Xml.Linq.XNode.AddAfterSelf(Object content)
+   at Xceed.Document.NET.InsertBeforeOrAfter.InsertTableAfterSelf(Int32 rowCount, Int32 columnCount)
+   at Xceed.Document.NET.Paragraph.InsertTableAfterSelf(Int32 rowCount, Int32 columnCount)
+   at IrmaDulce.Application.Services.DocumentoService.EmitirDocumentoAsync(EmitirDocumentoRequest request, Int32 operadorId) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.Application\Services\DocumentoService.cs:line 214
+   at IrmaDulce.API.BackgroundServices.DocumentProcessingWorker.ExecuteAsync(CancellationToken stoppingToken) in C:\Projects\Irma Dulce\backend\src\IrmaDulce.API\BackgroundServices\DocumentProcessingWorker.cs:line 42
+[2026-03-12 14:30:23.525] [INF] HTTP GET /api/documentos/status/f28083ad-4325-46f1-a390-60dfb70f53d9 responded 200 in 1.4930 ms
+[2026-03-12 14:30:56.790] [INF] HTTP GET /api/turmas responded 200 in 16.5192 ms
+[2026-03-12 14:30:56.799] [INF] HTTP GET /api/cursos responded 200 in 17.4922 ms
+[2026-03-12 14:30:56.808] [INF] HTTP GET /api/turmas responded 200 in 2.3394 ms
+[2026-03-12 14:30:56.818] [INF] HTTP GET /api/cursos responded 200 in 2.0210 ms
+[2026-03-12 14:31:05.619] [INF] HTTP GET /api/pessoas responded 200 in 2.6201 ms
+[2026-03-12 14:31:05.699] [INF] HTTP GET /api/turmas/1/matriculas responded 200 in 81.2847 ms
+[2026-03-12 14:31:28.354] [INF] HTTP GET /api/pessoas responded 200 in 1.8990 ms
+[2026-03-12 14:31:28.390] [INF] HTTP GET /api/turmas/2/disciplinas responded 200 in 37.3103 ms
+[2026-03-12 14:31:41.380] [INF] HTTP GET /api/turmas/1/disciplinas responded 200 in 4.4250 ms
+[2026-03-12 14:31:41.400] [INF] HTTP GET /api/pessoas responded 200 in 1.5122 ms
+[2026-03-12 18:02:27.358] [INF] HTTP GET /api/pessoas responded 200 in 127.9290 ms
+[2026-03-12 18:02:27.362] [INF] HTTP GET /api/pessoas responded 200 in 132.1703 ms
+[2026-03-12 18:02:27.374] [INF] HTTP GET /api/pessoas responded 200 in 3.4318 ms
+[2026-03-12 18:02:27.375] [INF] HTTP GET /api/turmas responded 200 in 145.2164 ms
+[2026-03-12 18:02:27.378] [INF] HTTP GET /api/pessoas responded 200 in 2.0324 ms
+[2026-03-12 18:02:27.389] [INF] HTTP GET /api/turmas responded 200 in 3.4286 ms
+[2026-03-12 18:02:27.423] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 30.8809 ms
+[2026-03-12 18:02:27.440] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 5.9280 ms
+[2026-03-12 18:02:29.334] [INF] HTTP GET /api/pessoas responded 200 in 2.2908 ms
+[2026-03-12 18:02:29.341] [INF] HTTP GET /api/configuracoes responded 200 in 8.5192 ms
+[2026-03-12 18:02:29.363] [INF] HTTP GET /api/pessoas responded 200 in 4.2963 ms
+[2026-03-12 18:02:29.364] [INF] HTTP GET /api/configuracoes responded 200 in 1.6255 ms
+[2026-03-12 18:02:34.274] [INF] HTTP GET /api/cursos responded 200 in 9.5851 ms
+[2026-03-12 18:02:34.286] [INF] HTTP GET /api/cursos responded 200 in 1.3112 ms
+[2026-03-12 18:02:34.296] [INF] HTTP GET /api/cursos responded 200 in 1.8423 ms
+[2026-03-12 18:02:34.309] [INF] HTTP GET /api/cursos responded 200 in 2.3031 ms
+[2026-03-12 18:02:34.371] [INF] HTTP GET /api/disciplinas responded 200 in 103.4888 ms
+[2026-03-12 18:02:34.384] [INF] HTTP GET /api/disciplinas responded 200 in 2.0906 ms
+[2026-03-12 18:02:36.744] [INF] HTTP GET /api/cursos responded 200 in 1.8580 ms
+[2026-03-12 18:02:36.745] [INF] HTTP GET /api/turmas responded 200 in 3.7626 ms
+[2026-03-12 18:02:36.760] [INF] HTTP GET /api/cursos responded 200 in 2.7185 ms
+[2026-03-12 18:02:36.763] [INF] HTTP GET /api/turmas responded 200 in 2.8106 ms
+[2026-03-12 18:02:40.955] [INF] HTTP GET /api/pessoas responded 200 in 10.3212 ms
+[2026-03-12 18:02:40.963] [INF] HTTP GET /api/turmas/1/matriculas responded 200 in 15.3015 ms
+[2026-03-12 18:02:47.579] [INF] HTTP GET /api/pessoas responded 200 in 3.8375 ms
+[2026-03-12 18:02:47.593] [INF] HTTP GET /api/turmas/1/disciplinas responded 200 in 18.8958 ms
+[2026-03-12 18:02:55.169] [INF] HTTP GET /api/turmas/1/disciplinas responded 200 in 6.2380 ms
+[2026-03-12 18:02:58.866] [INF] HTTP GET /api/diarioclasse/historico responded 200 in 227.6471 ms
+[2026-03-12 18:02:59.022] [INF] HTTP GET /api/diarioclasse/notas-grid responded 200 in 383.9630 ms
+[2026-03-12 18:03:08.120] [INF] HTTP GET /api/configuracoes responded 200 in 1.9009 ms
+[2026-03-12 18:03:08.122] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 5.4572 ms
+[2026-03-12 18:03:08.134] [INF] HTTP GET /api/configuracoes responded 200 in 1.5485 ms
+[2026-03-12 18:03:08.143] [INF] HTTP GET /api/financeiro/dashboard responded 200 in 3.6560 ms
+[2026-03-12 18:03:08.213] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 95.8189 ms
+[2026-03-12 18:03:08.321] [INF] HTTP GET /api/financeiro/mensalidades responded 200 in 96.9854 ms

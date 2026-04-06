@@ -7,7 +7,7 @@ namespace IrmaDulce.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Master,Administrativo")]
+[Authorize(Roles = "Master,Administrativo,Docente")]
 public class TurmasController : ControllerBase
 {
     private readonly ITurmaService _turmaService;
@@ -39,6 +39,7 @@ public class TurmasController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<TurmaResponse>> Criar([FromBody] TurmaCreateRequest request)
     {
         try
@@ -50,6 +51,7 @@ public class TurmasController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<TurmaResponse>> Atualizar(int id, [FromBody] TurmaCreateRequest request)
     {
         try
@@ -61,6 +63,7 @@ public class TurmasController : ControllerBase
     }
 
     [HttpPost("{turmaId}/matriculas")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> Matricular(int turmaId, [FromBody] MatriculaRequest request)
     {
         try
@@ -80,6 +83,7 @@ public class TurmasController : ControllerBase
     }
 
     [HttpDelete("{turmaId}/matriculas/{alunoId}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> CancelarMatricula(int turmaId, int alunoId)
     {
         try
@@ -98,12 +102,48 @@ public class TurmasController : ControllerBase
     }
 
     [HttpPut("{turmaId}/disciplinas/{disciplinaId}/docente")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> AtribuirDocente(int turmaId, int disciplinaId, [FromBody] AtribuirDocenteRequest request)
     {
         try
         {
             await _turmaService.AtribuirDocenteAsync(turmaId, disciplinaId, request.DocenteId);
             return Ok(new { message = "Docente atribuído com sucesso." });
+        }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+    }
+
+    [HttpGet("{id}/dias-letivos")]
+    public async Task<ActionResult<IEnumerable<TurmaDiaLetivoResponse>>> GetDiasLetivos(int id)
+    {
+        try
+        {
+            var diasLetivos = await _turmaService.GetDiasLetivosAsync(id);
+            return Ok(diasLetivos);
+        }
+        catch (KeyNotFoundException) { return NotFound(); }
+    }
+
+    [HttpPut("{id}/dias-letivos")]
+    [Authorize(Roles = "Master,Administrativo")]
+    public async Task<IActionResult> DefinirDiasLetivos(int id, [FromBody] List<TurmaDiaLetivoRequest> request)
+    {
+        try
+        {
+            await _turmaService.DefinirDiasLetivosAsync(id, request);
+            return Ok(new { message = "Dias letivos da turma atualizados com sucesso." });
+        }
+        catch (KeyNotFoundException) { return NotFound(); }
+    }
+
+    [HttpPut("{turmaId}/disciplinas/{disciplinaId}/horarios")]
+    [Authorize(Roles = "Master,Administrativo")]
+    public async Task<IActionResult> DefinirHorarios(int turmaId, int disciplinaId, [FromBody] List<TurmaDisciplinaHorarioRequest> request)
+    {
+        try
+        {
+            await _turmaService.DefinirHorariosDisciplinaAsync(turmaId, disciplinaId, request);
+            return Ok(new { message = "Horários da disciplina atualizados com sucesso." });
         }
         catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
     }

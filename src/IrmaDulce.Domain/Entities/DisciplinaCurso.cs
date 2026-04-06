@@ -11,4 +11,5 @@ public class DisciplinaCurso
     public int DisciplinaId { get; set; }
     public Disciplina Disciplina { get; set; } = null!;
     public int? Semestre { get; set; } // Semestre/Período em que é oferecida
+    public int Ordem { get; set; } = 1; // Prioridade no motor de geração de cronograma
 }

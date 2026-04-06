@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<DisciplinaCurso> DisciplinaCursos => Set<DisciplinaCurso>();
     public DbSet<Turma> Turmas => Set<Turma>();
     public DbSet<TurmaDisciplina> TurmaDisciplinas => Set<TurmaDisciplina>();
+    public DbSet<TurmaDisciplinaHorario> TurmaDisciplinaHorarios => Set<TurmaDisciplinaHorario>();
     public DbSet<Matricula> Matriculas => Set<Matricula>();
 
     // Diário de Classe
@@ -33,6 +34,8 @@ public class AppDbContext : DbContext
 
     // Cronograma
     public DbSet<CronogramaAula> CronogramaAulas => Set<CronogramaAula>();
+    public DbSet<TurmaDiaLetivo> TurmaDiasLetivos => Set<TurmaDiaLetivo>();
+    public DbSet<DisponibilidadeDocente> DisponibilidadesDocentes => Set<DisponibilidadeDocente>();
 
     // Configuração
     public DbSet<ConfiguracaoEscolar> ConfiguracoesEscolares => Set<ConfiguracaoEscolar>();
@@ -143,6 +146,18 @@ public class AppDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(e => e.DocenteId)
                   .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // ========== TurmaDisciplinaHorario ==========
+        modelBuilder.Entity<TurmaDisciplinaHorario>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.TurmaDisciplinaId, e.DiaSemana, e.Turno }).IsUnique();
+
+            entity.HasOne(e => e.TurmaDisciplina)
+                  .WithMany(td => td.Horarios)
+                  .HasForeignKey(e => e.TurmaDisciplinaId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ========== Matricula ==========
@@ -298,6 +313,29 @@ public class AppDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(e => e.DocenteId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ========== TurmaDiaLetivo ==========
+        modelBuilder.Entity<TurmaDiaLetivo>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.TurmaId, e.DiaSemana }).IsUnique();
+
+            entity.HasOne(e => e.Turma)
+                  .WithMany(t => t.DiasLetivos)
+                  .HasForeignKey(e => e.TurmaId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ========== DisponibilidadeDocente ==========
+        modelBuilder.Entity<DisponibilidadeDocente>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.HasOne(e => e.Docente)
+                  .WithMany(p => p.Disponibilidades)
+                  .HasForeignKey(e => e.DocenteId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ========== ConfiguracaoEscolar ==========

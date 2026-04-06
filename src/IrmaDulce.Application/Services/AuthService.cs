@@ -22,7 +22,7 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        var usuario = await _usuarioRepo.GetByLoginAsync(request.Login);
+        var usuario = await _usuarioRepo.GetByLoginAsync(request.Login.ToLower());
         if (usuario == null || !usuario.Ativo)
             throw new UnauthorizedAccessException("Login ou senha inválidos.");
 

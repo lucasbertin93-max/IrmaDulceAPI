@@ -8,7 +8,7 @@ namespace IrmaDulce.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Master,Administrativo")]
+[Authorize(Roles = "Master,Administrativo,Docente")]
 public class PessoasController : ControllerBase
 {
     private readonly IPessoaService _pessoaService;
@@ -40,6 +40,7 @@ public class PessoasController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<PessoaResponse>> Criar([FromBody] PessoaCreateRequest request)
     {
         try
@@ -54,6 +55,7 @@ public class PessoasController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<PessoaResponse>> Atualizar(int id, [FromBody] PessoaCreateRequest request)
     {
         try
@@ -72,6 +74,7 @@ public class PessoasController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> Desativar(int id)
     {
         try
@@ -83,5 +86,29 @@ public class PessoasController : ControllerBase
         {
             return NotFound();
         }
+    }
+
+    [HttpGet("{id}/disponibilidade")]
+    public async Task<ActionResult<IEnumerable<DisponibilidadeDocenteResponse>>> GetDisponibilidade(int id)
+    {
+        try
+        {
+            var disponibilidades = await _pessoaService.GetDisponibilidadesAsync(id);
+            return Ok(disponibilidades);
+        }
+        catch (KeyNotFoundException) { return NotFound(); }
+    }
+
+    [HttpPut("{id}/disponibilidade")]
+    [Authorize(Roles = "Master,Administrativo")]
+    public async Task<IActionResult> DefinirDisponibilidade(int id, [FromBody] List<DisponibilidadeDocenteRequest> request)
+    {
+        try
+        {
+            await _pessoaService.DefinirDisponibilidadesAsync(id, request);
+            return Ok(new { message = "Disponibilidade do docente atualizada com sucesso." });
+        }
+        catch (KeyNotFoundException) { return NotFound(); }
+        catch (InvalidOperationException ex) { return Conflict(new { message = ex.Message }); }
     }
 }

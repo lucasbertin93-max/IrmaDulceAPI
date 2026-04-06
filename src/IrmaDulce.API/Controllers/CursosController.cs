@@ -7,7 +7,7 @@ namespace IrmaDulce.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Master,Administrativo")]
+[Authorize(Roles = "Master,Administrativo,Docente")]
 public class CursosController : ControllerBase
 {
     private readonly ICursoService _cursoService;
@@ -32,6 +32,7 @@ public class CursosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<CursoResponse>> Criar([FromBody] CursoRequest request)
     {
         var curso = await _cursoService.CriarAsync(request);
@@ -39,6 +40,7 @@ public class CursosController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<CursoResponse>> Atualizar(int id, [FromBody] CursoRequest request)
     {
         try
@@ -50,6 +52,7 @@ public class CursosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> Deletar(int id)
     {
         try
@@ -61,6 +64,7 @@ public class CursosController : ControllerBase
     }
 
     [HttpPost("{cursoId}/disciplinas/{disciplinaId}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> VincularDisciplina(int cursoId, int disciplinaId, [FromQuery] int? semestre)
     {
         try
@@ -73,6 +77,7 @@ public class CursosController : ControllerBase
     }
 
     [HttpDelete("{cursoId}/disciplinas/{disciplinaId}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> DesvincularDisciplina(int cursoId, int disciplinaId)
     {
         try
@@ -89,11 +94,23 @@ public class CursosController : ControllerBase
         var ids = await _cursoService.GetDisciplinaIdsDoCursoAsync(cursoId);
         return Ok(ids);
     }
+
+    [HttpPut("{cursoId}/disciplinas/reordenar")]
+    [Authorize(Roles = "Master,Administrativo")]
+    public async Task<IActionResult> ReordenarDisciplinas(int cursoId, [FromBody] List<int> disciplinasIds)
+    {
+        try
+        {
+            await _cursoService.SetDisciplinaOrdemAsync(cursoId, disciplinasIds);
+            return Ok(new { message = "Ordem das disciplinas atualizada com sucesso." });
+        }
+        catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+    }
 }
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Master,Administrativo")]
+[Authorize(Roles = "Master,Administrativo,Docente")]
 public class DisciplinasController : ControllerBase
 {
     private readonly IDisciplinaService _disciplinaService;
@@ -118,6 +135,7 @@ public class DisciplinasController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<DisciplinaResponse>> Criar([FromBody] DisciplinaRequest request)
     {
         var d = await _disciplinaService.CriarAsync(request);
@@ -125,6 +143,7 @@ public class DisciplinasController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<ActionResult<DisciplinaResponse>> Atualizar(int id, [FromBody] DisciplinaRequest request)
     {
         try
@@ -136,6 +155,7 @@ public class DisciplinasController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Master,Administrativo")]
     public async Task<IActionResult> Deletar(int id)
     {
         try

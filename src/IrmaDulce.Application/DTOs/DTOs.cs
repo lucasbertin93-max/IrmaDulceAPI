@@ -7,6 +7,11 @@ namespace IrmaDulce.Application.DTOs;
 public record LoginRequest(string Login, string Senha);
 public record LoginResponse(string Token, string RefreshToken, string Nome, string Perfil, string IdFuncional);
 
+// ==================== Usuario ====================
+public record UsuarioResponse(int Id, string Login, string PessoaNome, string IdFuncional, PerfilUsuario Perfil, bool Ativo, DateTime? UltimoAcesso);
+public record UsuarioUpdateRoleRequest(PerfilUsuario Perfil);
+public record UsuarioResetPasswordRequest(string NovaSenha);
+
 // ==================== Pessoa ====================
 public record PessoaCreateRequest(
     string NomeCompleto,
@@ -63,6 +68,9 @@ public record PessoaResponse(
     int? QuantidadeParcelas
 );
 
+public record DisponibilidadeDocenteRequest(DayOfWeek DiaSemana, TimeSpan HoraInicio, TimeSpan HoraFim);
+public record DisponibilidadeDocenteResponse(int Id, DayOfWeek DiaSemana, TimeSpan HoraInicio, TimeSpan HoraFim);
+
 // ==================== Curso ====================
 public record CursoRequest(string Nome, int CargaHoraria);
 public record CursoResponse(int Id, string IdFuncional, string Nome, int CargaHoraria, bool Ativo);
@@ -74,6 +82,12 @@ public record DisciplinaResponse(int Id, string IdFuncional, string Nome, int Ca
 // ==================== Turma ====================
 public record TurmaCreateRequest(string Nome, string? Horario, DateTime DataInicio, DateTime DataFim, int CursoId);
 public record TurmaResponse(int Id, string IdFuncional, string Nome, string? Horario, DateTime DataInicio, DateTime DataFim, int CursoId, string CursoNome, bool Ativo);
+
+public record TurmaDiaLetivoRequest(DayOfWeek DiaSemana, TimeSpan HoraInicio, TimeSpan HoraFim);
+public record TurmaDiaLetivoResponse(int Id, DayOfWeek DiaSemana, TimeSpan HoraInicio, TimeSpan HoraFim);
+
+public record TurmaDisciplinaHorarioRequest(DayOfWeek DiaSemana, int Turno);
+public record TurmaDisciplinaHorarioResponse(int Id, DayOfWeek DiaSemana, int Turno);
 
 // ==================== Matrícula ====================
 public record MatriculaRequest(int AlunoId, int TurmaId);
@@ -119,8 +133,10 @@ public record DashboardFinanceiroResponse(decimal TotalEntradas, decimal TotalSa
 
 // ==================== Cronograma ====================
 public record CronogramaRequest(int TurmaId, int DisciplinaId, int DocenteId, DateTime Data, TimeSpan HoraInicio, TimeSpan HoraFim, string? Sala);
-public record CronogramaResponse(int Id, int TurmaId, string TurmaNome, int DisciplinaId, string DisciplinaNome, int DocenteId, string DocenteNome, DateTime Data, TimeSpan HoraInicio, TimeSpan HoraFim, string? Sala);
+public record CronogramaResponse(int Id, int TurmaId, string TurmaNome, int DisciplinaId, string DisciplinaNome, int DocenteId, string DocenteNome, DateTime Data, TimeSpan HoraInicio, TimeSpan HoraFim, string? Sala, bool IsEstagio);
 public record ConflitoCronogramaResponse(string Tipo, string Mensagem);
+public record CronogramaGerarLoteRequest(int TurmaId, DateTime DataInicioLote, DateTime DataFimLote);
+public record CronogramaGerarLoteResponse(int TotalAulasGeradas, List<ConflitoCronogramaResponse> Conflitos);
 
 // ==================== Configuração ====================
 public record ConfiguracaoRequest(decimal MediaMinimaAprovacao, decimal FrequenciaMinimaPercent, int HorasAulaPadraoPorDia, int PrazoMaximoParcelamento, decimal MultaAtrasoPercent, decimal JurosMensalPercent);

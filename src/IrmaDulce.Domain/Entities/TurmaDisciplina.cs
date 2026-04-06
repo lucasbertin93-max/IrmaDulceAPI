@@ -12,4 +12,6 @@ public class TurmaDisciplina
     public Disciplina Disciplina { get; set; } = null!;
     public int? DocenteId { get; set; }
     public Pessoa? Docente { get; set; }
+
+    public ICollection<TurmaDisciplinaHorario> Horarios { get; set; } = new List<TurmaDisciplinaHorario>();
 }
